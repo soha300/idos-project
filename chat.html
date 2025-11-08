@@ -6,6 +6,7 @@
     <title>تشخيص فوري للأعراض | دردشة المساعد الذكي</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
+    <meta name="description" content="محادثة مع المساعد الطبي الذكي - احصل على نصائح طبية أولية واستشارات فورية">
 </head>
 <body class="loading">
     <div id="preloader" aria-hidden="true">
@@ -17,7 +18,7 @@
 
     <header class="site-header">
         <div class="nav-container">
-            <a class="brand" href="index.html">
+            <a class="brand" href="index.html" aria-label="العودة للصفحة الرئيسية">
                 <span class="brand__icon" aria-hidden="true">🩺</span>
                 <span class="brand__text">تشخيص فوري</span>
             </a>
@@ -30,7 +31,30 @@
                     <li><a href="index.html#contact">اتصل بنا</a></li>
                 </ul>
             </nav>
-            <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobileMenu">
+            
+            <!-- إضافة قسم المستخدم الديناميكي -->
+            <div id="userSection" class="user-info" style="display: none;">
+                <div class="user-avatar" id="userAvatar">م</div>
+                <div>
+                    <div id="userName" class="user-welcome"></div>
+                    <div id="liveStats" class="live-stats" style="display: none;">
+                        <div class="stat-item">
+                            <span class="stat-number" id="totalRecords">0</span>
+                            <span class="stat-label">تشخيص</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="recentRecords">0</span>
+                            <span class="stat-label">مؤخراً</span>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-small btn-ghost" id="logoutBtn" aria-label="تسجيل الخروج">تسجيل الخروج</button>
+            </div>
+            <div id="authSection">
+                <button class="btn btn-small btn-primary" id="loginBtn" aria-label="تسجيل الدخول">تسجيل الدخول</button>
+            </div>
+            
+            <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobileMenu" aria-label="قائمة التنقل">
                 <span class="nav-toggle__line"></span>
                 <span class="sr-only">فتح القائمة</span>
             </button>
@@ -54,13 +78,15 @@
                 <h1>تحدث مع المساعد الصحي الذكي</h1>
                 <p>ابدأ محادثة فورية للحصول على نصائح أولية وإرشادات معتمدة على الأعراض التي تشعر بها.</p>
             </div>
-            <button class="btn btn-ghost btn-small" type="button" id="clearChatBtn">تفريغ المحادثة</button>
+            <button class="btn btn-ghost btn-small" type="button" id="clearChatBtn" aria-label="مسح كل المحادثة">
+                تفريغ المحادثة
+            </button>
         </section>
 
         <section class="chat-section" aria-label="غرفة المحادثة">
             <div class="chat-window" id="chatWindow" role="log" aria-live="polite" aria-relevant="additions">
                 <div class="chat-message chat-message--ai">
-                    <div class="chat-avatar">🤖</div>
+                    <div class="chat-avatar" aria-hidden="true">🤖</div>
                     <div class="chat-bubble">
                         <span class="chat-name">المساعد الذكي</span>
                         <p>مرحبًا! أنا هنا لمساعدتك. أخبرني بما تشعر به لنبدأ.</p>
@@ -70,16 +96,20 @@
             </div>
             <form class="chat-form" id="chatForm">
                 <label class="sr-only" for="chatInput">أدخل رسالتك</label>
-                <input type="text" id="chatInput" placeholder="اكتب ما تشعر به..." autocomplete="off" required>
-                <button class="btn btn-primary" type="submit" aria-label="إرسال">إرسال</button>
+                <input type="text" id="chatInput" placeholder="اكتب ما تشعر به..." autocomplete="off" required aria-describedby="chatHelp">
+                <button class="btn btn-primary" type="submit" aria-label="إرسال الرسالة">
+                    إرسال
+                </button>
+                <small id="chatHelp" class="sr-only">اضغط Enter لإرسال الرسالة</small>
             </form>
         </section>
     </main>
 
-    <footer class="site-footer">
+    <footer class="site-footer" role="contentinfo">
         <p>© 2025 تشخيص فوري للأعراض. جميع الحقوق محفوظة.</p>
     </footer>
 
-    <script src="chat.js" defer></script>
+    <script src="app.js"></script>
+    <script src="chat.js"></script>
 </body>
 </html>
