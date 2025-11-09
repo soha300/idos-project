@@ -1,281 +1,0 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>تشخيص فوري للأعراض | صفحة التحليل الذكي</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-    <meta name="description" content="التشخيص الذكي للأعراض - أدخل أعراضك واحصل على تشخيص أولي مدعوم بالذكاء الاصطناعي">
-</head>
-<body class="loading">
-    <div id="preloader" aria-hidden="true">
-        <div class="loader">
-            <div class="loader__pulse"></div>
-            <span class="loader__text">تجهيز أدوات التشخيص...</span>
-        </div>
-    </div>
-
-    <header class="site-header">
-        <div class="nav-container">
-            <a class="brand" href="index.html" aria-label="العودة للصفحة الرئيسية">
-                <span class="brand__icon" aria-hidden="true">🩺</span>
-                <span class="brand__text">تشخيص فوري</span>
-            </a>
-            <nav class="main-nav" aria-label="القائمة الرئيسية">
-                <ul>
-                    <li><a href="index.html">الرئيسية</a></li>
-                    <li><a href="diagnosis.html" class="is-active">التشخيص</a></li>
-                    <li><a href="chat.html">محادثة AI</a></li>
-                    <li><a href="about.html">عن التطبيق</a></li>
-                    <li><a href="#contact">اتصل بنا</a></li>
-                </ul>
-            </nav>
-            
-            <!-- إضافة قسم المستخدم الديناميكي -->
-            <div id="userSection" class="user-info" style="display: none;">
-                <div class="user-avatar" id="userAvatar">م</div>
-                <div>
-                    <div id="userName" class="user-welcome"></div>
-                    <div id="liveStats" class="live-stats" style="display: none;">
-                        <div class="stat-item">
-                            <span class="stat-number" id="totalRecords">0</span>
-                            <span class="stat-label">تشخيص</span>
-                        </div>
-                        <div class="stat-item">
-                            <span class="stat-number" id="recentRecords">0</span>
-                            <span class="stat-label">مؤخراً</span>
-                        </div>
-                    </div>
-                </div>
-                <button class="btn btn-small btn-ghost" id="logoutBtn" aria-label="تسجيل الخروج">تسجيل الخروج</button>
-            </div>
-            <div id="authSection">
-                <button class="btn btn-small btn-primary" id="loginBtn" aria-label="تسجيل الدخول">تسجيل الدخول</button>
-            </div>
-            
-            <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobileMenu" aria-label="قائمة التنقل">
-                <span class="nav-toggle__line"></span>
-                <span class="sr-only">فتح القائمة</span>
-            </button>
-        </div>
-        <div id="mobileMenu" class="mobile-nav" hidden>
-            <nav aria-label="القائمة الجانبية">
-                <ul>
-                    <li><a href="index.html">الرئيسية</a></li>
-                    <li><a href="diagnosis.html" class="is-active">التشخيص</a></li>
-                    <li><a href="chat.html">محادثة AI</a></li>
-                    <li><a href="about.html">عن التطبيق</a></li>
-                    <li><a href="#contact">اتصل بنا</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
-
-    <main class="page" id="diagnosisPage">
-        <section class="hero hero--slim">
-            <div class="hero__content hero__content--slim">
-                <span class="hero__badge">التشخيص الذكي</span>
-                <h1>تحليل الأعراض الطبية</h1>
-                <p>أدخل أعراضك بالتفصيل واحصل على تشخيص أولي مدعوم بالذكاء الاصطناعي.</p>
-            </div>
-        </section>
-
-        <div class="diagnosis-layout">
-            <section class="diagnosis-form-section" aria-labelledby="symptomsHeading">
-                <div class="section__header">
-                    <h2 id="symptomsHeading">وصف الأعراض</h2>
-                    <p>أدخل أعراضك بالتفصيل للحصول على تحليل دقيق</p>
-                </div>
-                
-                <form id="diagnosisForm" class="form" novalidate>
-                    <div class="form__field">
-                        <label for="symptomsText">وصف الأعراض</label>
-                        <textarea 
-                            id="symptomsText" 
-                            name="symptomsText"
-                            rows="6" 
-                            placeholder="صف أعراضك بالتفصيل، متى بدأت، شدتها، وأي عوامل تزيدها أو تخففها..." 
-                            required
-                            aria-required="true"
-                        ></textarea>
-                        <div class="form__hint">يرجى وصف الأعراض بدقة قدر الإمكان للحصول على تشخيص أدق</div>
-                    </div>
-                    
-                    <div class="form__field">
-                        <label for="symptomsDuration">مدة الأعراض</label>
-                        <select id="symptomsDuration" name="symptomsDuration" aria-required="true">
-                            <option value="">اختر المدة</option>
-                            <option value="hours">أقل من 24 ساعة</option>
-                            <option value="days">1-3 أيام</option>
-                            <option value="week">4-7 أيام</option>
-                            <option value="weeks">1-4 أسابيع</option>
-                            <option value="months">أكثر من شهر</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form__field">
-                        <label for="symptomsSeverity">شدة الأعراض</label>
-                        <select id="symptomsSeverity" name="symptomsSeverity" aria-required="true">
-                            <option value="">اختر الشدة</option>
-                            <option value="mild">خفيفة (لا تؤثر على النشاط اليومي)</option>
-                            <option value="moderate">متوسطة (تؤثر جزئياً على النشاط اليومي)</option>
-                            <option value="severe">شديدة (تمنع ممارسة النشاط اليومي)</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form__field">
-                        <label for="additionalInfo">معلومات إضافية</label>
-                        <textarea 
-                            id="additionalInfo" 
-                            name="additionalInfo"
-                            rows="3" 
-                            placeholder="أي معلومات إضافية قد تساعد في التشخيص (مثل: أدوية تتناولها، أمراض مزمنة، تاريخ عائلي...)"
-                        ></textarea>
-                    </div>
-                    
-                    <div class="form__actions">
-                        <button type="submit" class="btn btn-primary btn-large" id="analyzeBtn">
-                            <span class="btn__text">تحليل الأعراض</span>
-                            <span class="btn__loader" hidden aria-hidden="true"></span>
-                        </button>
-                        <button type="reset" class="btn btn-ghost" id="clearFormBtn">مسح النموذج</button>
-                    </div>
-                </form>
-            </section>
-            
-            <section class="diagnosis-results-section" aria-labelledby="resultsHeading">
-                <div class="section__header">
-                    <h2 id="resultsHeading">نتائج التحليل</h2>
-                    <p>سيظهر هنا التشخيص الأولي بناءً على الأعراض المدخلة</p>
-                </div>
-                
-                <div id="resultsPlaceholder" class="results-placeholder">
-                    <div class="placeholder-icon">🔍</div>
-                    <h3>لم يتم إدخال أعراض بعد</h3>
-                    <p>أدخل أعراضك في النموذج المجاور للحصول على تشخيص أولي</p>
-                </div>
-                
-                <div id="diagnosisResults" class="diagnosis-results" hidden>
-                    <div class="results-header">
-                        <h3>التشخيص الأولي</h3>
-                        <div class="results-meta">
-                            <span id="resultsDate"></span>
-                            <span id="resultsConfidence"></span>
-                        </div>
-                    </div>
-                    
-                    <div class="results-body">
-                        <div class="condition-card">
-                            <h4 id="primaryCondition">الحالة المحتملة</h4>
-                            <p id="conditionDescription">وصف الحالة</p>
-                            <div class="probability-bar">
-                                <div class="probability-fill" id="probabilityFill"></div>
-                                <span class="probability-text" id="probabilityText">0% احتمالية</span>
-                            </div>
-                        </div>
-                        
-                        <div class="recommendations">
-                            <h4>التوصيات</h4>
-                            <ul id="recommendationsList">
-                                <!-- سيتم ملؤها ديناميكياً -->
-                            </ul>
-                        </div>
-                        
-                        <div class="warning-notice" role="alert">
-                            <strong>ملاحظة هامة:</strong> هذا التشخيص استرشادي ولا يغني عن استشارة الطبيب المختص. إذا كانت الأعراض شديدة أو مستمرة، يرجى التوجه إلى أقرب مركز طبي.
-                        </div>
-                    </div>
-                    
-                    <div class="results-actions">
-                        <button class="btn btn-primary" id="saveResultsBtn">حفظ النتائج</button>
-                        <button class="btn btn-ghost" id="shareResultsBtn">مشاركة النتائج</button>
-                        <button class="btn btn-ghost" id="printResultsBtn">طباعة النتائج</button>
-                    </div>
-                </div>
-                
-                <div id="analysisProgress" class="analysis-progress" hidden>
-                    <div class="progress-indicator">
-                        <div class="progress-bar">
-                            <div class="progress-fill" id="progressFill"></div>
-                        </div>
-                        <span class="progress-text" id="progressText">جاري تحليل الأعراض...</span>
-                    </div>
-                </div>
-            </section>
-        </div>
-        
-        <section class="section" aria-labelledby="historyHeading">
-            <div class="section__header">
-                <h2 id="historyHeading">سجل التشخيصات السابقة</h2>
-                <p>عرض وتصفح التشخيصات المحفوظة سابقاً</p>
-            </div>
-            
-            <div id="diagnosisHistory" class="history-grid">
-                <div class="history-empty">
-                    <div class="empty-icon">📋</div>
-                    <h3>لا توجد تشخيصات سابقة</h3>
-                    <p>سيظهر هنا سجل تشخيصاتك بعد حفظ أول نتيجة</p>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer class="site-footer" role="contentinfo">
-        <div class="footer-content">
-            <p>© 2025 تشخيص فوري للأعراض. جميع الحقوق محفوظة.</p>
-        </div>
-    </footer>
-
-    <!-- النوافذ المنبثقة للمصادقة -->
-    <dialog id="authDialog" class="modal" aria-labelledby="authDialogTitle">
-        <div class="modal__content">
-            <button class="modal__close" type="button" id="closeAuthDialog" aria-label="إغلاق نافذة المصادقة">×</button>
-            <div class="modal__heading">
-                <span class="modal__icon">🔐</span>
-                <h3 id="authDialogTitle">تسجيل الدخول</h3>
-            </div>
-            <form id="loginForm" class="auth-form" novalidate>
-                <div class="form__field">
-                    <label for="loginEmail">البريد الإلكتروني</label>
-                    <input type="email" id="loginEmail" name="loginEmail" required placeholder="name@example.com" aria-required="true">
-                </div>
-                <div class="form__field">
-                    <label for="loginPassword">كلمة المرور</label>
-                    <input type="password" id="loginPassword" name="loginPassword" required placeholder="كلمة المرور" aria-required="true">
-                </div>
-                <button class="btn btn-primary btn-full" type="submit">تسجيل الدخول</button>
-            </form>
-            <p class="text-center">ليس لديك حساب؟ <button class="link-button" id="showRegister" aria-label="الانتقال إلى إنشاء حساب">إنشاء حساب جديد</button></p>
-        </div>
-    </dialog>
-
-    <dialog id="registerDialog" class="modal" aria-labelledby="registerDialogTitle">
-        <div class="modal__content">
-            <button class="modal__close" type="button" id="closeRegisterDialog" aria-label="إغلاق نافذة التسجيل">×</button>
-            <div class="modal__heading">
-                <span class="modal__icon">👤</span>
-                <h3 id="registerDialogTitle">إنشاء حساب جديد</h3>
-            </div>
-            <form id="registerForm" class="auth-form" novalidate>
-                <div class="form__field">
-                    <label for="registerName">الاسم الكامل</label>
-                    <input type="text" id="registerName" name="registerName" required placeholder="الاسم الكامل" aria-required="true">
-                </div>
-                <div class="form__field">
-                    <label for="registerEmail">البريد الإلكتروني</label>
-                    <input type="email" id="registerEmail" name="registerEmail" required placeholder="name@example.com" aria-required="true">
-                </div>
-                <div class="form__field">
-                    <label for="registerPassword">كلمة المرور</label>
-                    <input type="password" id="registerPassword" name="registerPassword" required placeholder="كلمة المرور" aria-required="true">
-                </div>
-                <button class="btn btn-primary btn-full" type="submit">إنشاء حساب</button>
-            </form>
-            <p class="text-center">لديك حساب بالفعل؟ <button class="link-button" id="showLogin" aria-label="الانتقال إلى تسجيل الدخول">تسجيل الدخول</button></p>
-        </div>
-    </dialog>
-
-    <script src="app.js"></script>
-</body>
-</html>
