@@ -1,190 +1,0 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>تشخيص فوري للأعراض | صفحة التحليل الذكي</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body class="loading">
-    <div id="preloader" aria-hidden="true">
-        <div class="loader">
-            <div class="loader__pulse"></div>
-            <span class="loader__text">تجهيز أدوات التشخيص...</span>
-        </div>
-    </div>
-
-    <header class="site-header">
-        <div class="nav-container">
-            <a class="brand" href="index.html">
-                <span class="brand__icon" aria-hidden="true">🩺</span>
-                <span class="brand__text">تشخيص فوري</span>
-            </a>
-            <nav class="main-nav" aria-label="القائمة الرئيسية">
-                <ul>
-                    <li><a href="index.html">الرئيسية</a></li>
-                    <li><a href="diagnosis.html" class="is-active">التشخيص</a></li>
-                    <li><a href="chat.html">محادثة AI</a></li>
-                    <li><a href="index.html#about">عن التطبيق</a></li>
-                </ul>
-            </nav>
-            <div class="auth-section" id="authSection">
-                <button class="btn btn-small" id="loginBtn">تسجيل الدخول</button>
-            </div>
-            <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobileMenu">
-                <span class="nav-toggle__line"></span>
-                <span class="sr-only">فتح القائمة</span>
-            </button>
-        </div>
-        <div id="mobileMenu" class="mobile-nav" hidden>
-            <nav aria-label="القائمة الجانبية">
-                <ul>
-                    <li><a href="index.html">الرئيسية</a></li>
-                    <li><a href="diagnosis.html" class="is-active">التشخيص</a></li>
-                    <li><a href="chat.html">محادثة AI</a></li>
-                    <li><a href="index.html#about">عن التطبيق</a></li>
-                </ul>
-            </nav>
-        </div>
-    </header>
-
-    <main class="page" id="diagnosisPage">
-        <section class="hero hero--slim">
-            <div class="hero__content hero__content--slim">
-                <span class="hero__badge">تحليل متقدم</span>
-                <h1>صفحة التشخيص الذكي للأعراض</h1>
-                <p>اختر الأعراض التي تشعر بها، وسنقارنها بقاعدة بيانات طبية متجددة لنقدّم لك احتمالات تشخيص دقيقة.</p>
-            </div>
-        </section>
-
-        <section class="section" aria-labelledby="inputHeading">
-            <div class="section__header">
-                <h2 id="inputHeading">بيانات الحالة الصحية</h2>
-                <p>أدخل الأعراض التي تشعر بها في الحقل النصي أدناه.</p>
-            </div>
-            <div class="diagnosis-layout">
-                <div class="diagnosis-panel">
-                    <form id="symptomForm" class="form diagnosis-form">
-                        <label class="form__field">
-                            <span>أدخل الأعراض التي تشعر بها</span>
-                            <textarea id="symptomInput" rows="4" placeholder="مثل: صداع، كحة، ارتفاع في درجة الحرارة..." required></textarea>
-                        </label>
-                        <label class="form__field">
-                            <span>اختر القسم الطبي الأقرب</span>
-                            <select id="departmentSelect">
-                                <option value="" selected>تحديد القسم تلقائيًا</option>
-                                <option value="طب عام">طب عام</option>
-                                <option value="باطنة">باطنة</option>
-                                <option value="طب الأطفال">طب الأطفال</option>
-                                <option value="أمراض الصدر">أمراض الصدر</option>
-                                <option value="أمراض القلب">أمراض القلب</option>
-                                <option value="الأمراض الجلدية">الأمراض الجلدية</option>
-                                <option value="الصحة النفسية">الصحة النفسية</option>
-                                <option value="الأعصاب">الأعصاب</option>
-                            </select>
-                        </label>
-                        <div class="form__actions">
-                            <button class="btn btn-primary btn-full" type="submit">تشغيل التحليل الذكي</button>
-                        </div>
-                    </form>
-                </div>
-
-                <aside class="diagnosis-panel diagnosis-panel--info">
-                    <h3>كيفية استخدام أداة التشخيص</h3>
-                    <ul class="checklist">
-                        <li>أدخل الأعراض التي تشعر بها في الحقل النصي.</li>
-                        <li>يمكنك اختيار القسم الطبي يدويًا أو تركه للتحديد التلقائي.</li>
-                        <li>يتم تحليل الأعراض ومقارنتها بقائمة أمراض موسعة.</li>
-                        <li>لا تغني النتائج عن مراجعة الطبيب المختص عند الضرورة.</li>
-                    </ul>
-                    <div class="info-card">
-                        <strong>💡 تلميح:</strong>
-                        <p>أدخل أكبر قدر ممكن من التفاصيل حول الأعراض لتحسين دقة المقارنة.</p>
-                    </div>
-                </aside>
-            </div>
-        </section>
-
-        <section class="section" aria-labelledby="resultHeading">
-            <div class="section__header">
-                <h2 id="resultHeading">نتائج التحليل</h2>
-                <p>سيتم عرض أهم الاحتمالات الطبية مع توصيات مبدئية.</p>
-            </div>
-            <div id="diagnosisResults" class="result-grid">
-                <div class="placeholder-card">
-                    <span>🔍</span>
-                    <p>قم بإدخال الأعراض ثم اضغط على "تشغيل التحليل الذكي" لعرض النتائج هنا.</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="section" aria-labelledby="historyHeading">
-            <div class="section__header">
-                <h2 id="historyHeading">سجل التحليلات السابقة</h2>
-                <p>يمكنك العودة لنتائج تحليلاتك الأخيرة.</p>
-            </div>
-            <div id="historyList" class="history-grid">
-                <div class="placeholder-card">
-                    <span>🗂️</span>
-                    <p>لا يوجد سجل بعد. سيتم حفظ النتائج الأخيرة تلقائيًا.</p>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer class="site-footer">
-        <p>© 2025 تشخيص فوري للأعراض. جميع الحقوق محفوظة.</p>
-    </footer>
-
-    <!-- القائمة الجانبية -->
-    <div id="sidebar" class="sidebar">
-        <div class="sidebar-header">
-            <h3 class="sidebar-title">القائمة</h3>
-            <button class="sidebar-close" id="sidebarClose">×</button>
-        </div>
-        <nav class="sidebar-nav">
-            <ul>
-                <li><a href="index.html">الرئيسية</a></li>
-                <li><a href="diagnosis.html" class="is-active">التشخيص</a></li>
-                <li><a href="chat.html">محادثة AI</a></li>
-                <li><a href="index.html#about">عن التطبيق</a></li>
-            </ul>
-        </nav>
-    </div>
-
-    <!-- طبقة التعتيم -->
-    <div id="sidebarOverlay" class="sidebar-overlay"></div>
-
-    <!-- زر فتح القائمة الجانبية -->
-    <button class="sidebar-toggle" id="sidebarToggle">
-        ☰
-    </button>
-
-    <dialog id="authModal" class="modal">
-        <div class="modal__content">
-            <button class="modal__close" type="button" id="closeAuthModal" aria-label="إغلاق">×</button>
-            <div class="modal__heading">
-                <span class="modal__icon">🔐</span>
-                <h3 id="authModalTitle">تسجيل الدخول</h3>
-            </div>
-            <form id="authForm" class="form">
-                <label class="form__field">
-                    <span>البريد الإلكتروني</span>
-                    <input type="email" id="authEmail" required placeholder="name@example.com">
-                </label>
-                <label class="form__field">
-                    <span>كلمة المرور</span>
-                    <input type="password" id="authPassword" required placeholder="كلمة المرور">
-                </label>
-                <button class="btn btn-primary btn-full" type="submit" id="authSubmitBtn">تسجيل الدخول</button>
-            </form>
-            <p class="auth-switch">ليس لديك حساب؟ <button type="button" id="switchAuthMode">إنشاء حساب جديد</button></p>
-            <div id="authFeedback" class="form-feedback" hidden></div>
-        </div>
-    </dialog>
-
-    <script src="diagnosis.js" defer></script>
-    <script src="auth.js" defer></script>
-</body>
-</html>
