@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>تشخيص فوري للأعراض | الصفحة الرئيسية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="emergency-map.css">
+</head>
+<body class="loading">
+    <div id="preloader" aria-hidden="true">
+        <div class="loader">
+            <div class="loader__pulse"></div>
+            <span class="loader__text">يتم تحميل المنصة الصحية...</span>
+        </div>
+    </div>
+
+    <header class="site-header">
+        <div class="nav-container">
+            <a class="brand" href="index.html">
+                <span class="brand__icon" aria-hidden="true">🩺</span>
+                <span class="brand__text">تشخيص فوري</span>
+            </a>
+            <nav class="main-nav" aria-label="القائمة الرئيسية">
+                <ul>
+                    <li><a href="index.html" class="is-active">الرئيسية</a></li>
+                    <li><a href="diagnosis.html">التشخيص</a></li>
+                    <li><a href="chat.html">محادثة AI</a></li>
+                    <li><a href="#about">عن التطبيق</a></li>
+                </ul>
+            </nav>
+            <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobileMenu">
+                <span class="nav-toggle__line"></span>
+                <span class="sr-only">فتح القائمة</span>
+            </button>
+        </div>
+        <div id="mobileMenu" class="mobile-nav" hidden>
+            <nav aria-label="القائمة الجانبية">
+                <ul>
+                    <li><a href="index.html" class="is-active">الرئيسية</a></li>
+                    <li><a href="diagnosis.html">التشخيص</a></li>
+                    <li><a href="chat.html">محادثة AI</a></li>
+                    <li><a href="index.html#about">عن التطبيق</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page" id="mainContent">
+        <section class="hero">
+            <div class="hero__content">
+                <span class="hero__badge">منصة صحة رقمية متكاملة</span>
+                <h1>تشخيص ذكي للأعراض مع متابعة فورية لحالتك الصحية</h1>
+                <p>ابدأ رحلتك مع منصة تشخيص فوري للأعراض لتحصل على توصيات دقيقة، خريطة للمستشفيات القريبة، ومحادثة مع مساعد طبي ذكي.</p>
+                <div class="hero__actions">
+                    <a class="btn btn-primary" href="diagnosis.html">ابدأ التشخيص الآن</a>
+                    <a class="btn btn-ghost" href="chat.html">تحدث مع المساعد الذكي</a>
+                </div>
+                <div class="hero__stats">
+                    <div>
+                        <h3>120K+</h3>
+                        <p>جلسة تشخيص ناجحة</p>
+                    </div>
+                    <div>
+                        <h3>95%</h3>
+                        <p>رضا المستخدمين</p>
+                    </div>
+                    <div>
+                        <h3>24/7</h3>
+                        <p>دعم واستشارات</p>
+                    </div>
+                </div>
+            </div>
+            <div class="hero__visual" aria-hidden="true">
+                <div class="pulse-card">
+                    <span>🩻</span>
+                    <strong>فحص سريع</strong>
+                    <p>نتائج أولية متكاملة</p>
+                </div>
+                <div class="pulse-card">
+                    <span>🧠</span>
+                    <strong>تحليل AI</strong>
+                    <p>مقاربات دقيقة للأعراض</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" aria-labelledby="highlights">
+            <div class="section__header">
+                <h2 id="highlights">خدمات المنصة</h2>
+                <p>مجموعة أدوات متكاملة لمتابعة صحتك من مكان واحد.</p>
+            </div>
+            <div class="feature-grid">
+                <article class="feature">
+                    <div class="feature__icon">🧾</div>
+                    <h3>تشخيص مدعوم بالذكاء الاصطناعي</h3>
+                    <p>تحليل دقيق للأعراض باستخدام قاعدة بيانات واسعة يتم تحديثها باستمرار.</p>
+                    <a class="link" href="diagnosis.html">انتقل لصفحة التشخيص</a>
+                </article>
+                <article class="feature">
+                    <div class="feature__icon">🗺️</div>
+                    <h3>تحديد أقرب المستشفيات</h3>
+                    <p>خريطة تفاعلية تعتمد على موقعك الجغرافي لعرض أهم المراكز والمستشفيات القريبة.</p>
+                    <a class="link" href="#mapSection">عرض الخريطة</a>
+                </article>
+                <article class="feature">
+                    <div class="feature__icon">💬</div>
+                    <h3>محادثة طبية فورية</h3>
+                    <p>تواصل مع مساعد طبي افتراضي للحصول على نصائح مبدئية حول حالتك.</p>
+                    <a class="link" href="chat.html">ابدأ المحادثة</a>
+                </article>
+            </div>
+        </section>
+
+        <section class="section" aria-labelledby="vitals">
+            <div class="section__header">
+                <h2 id="vitals">مراقبة المؤشرات الحيوية</h2>
+                <p>اطّلع على قراءاتك العامة لمحاكاة حالتك الحالية.</p>
+            </div>
+            <div class="panel-grid">
+                <article class="panel panel--primary">
+                    <header class="panel__header">
+                        <h3>لوحة المؤشرات</h3>
+                    </header>
+                    <div class="vitals-grid">
+                        <div class="vital-card">
+                            <span class="vital-card__icon">🩸</span>
+                            <div>
+                                <h4>ضغط الدم</h4>
+                                <p id="bpValue">120/80</p>
+                                <span class="vital-chip" id="bpStatus">طبيعي</span>
+                            </div>
+                        </div>
+                        <div class="vital-card">
+                            <span class="vital-card__icon">🧪</span>
+                            <div>
+                                <h4>سكر الدم</h4>
+                                <p id="glucoseValue">98 mg/dL</p>
+                                <span class="vital-chip" id="glucoseStatus">طبيعي</span>
+                            </div>
+                        </div>
+                        <div class="vital-card">
+                            <span class="vital-card__icon">❤️</span>
+                            <div>
+                                <h4>نبض القلب</h4>
+                                <p id="pulseValue">72 bpm</p>
+                                <span class="vital-chip" id="pulseStatus">طبيعي</span>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- قسم أزرار الطوارئ الكبيرة -->
+        <section class="section" aria-labelledby="emergencyHeading">
+            <div class="section__header">
+                <h2 id="emergencyHeading">🚨 رقم الطوارئ الموحد</h2>
+                <p>اتصل فوراً في الحالات الطارئة. هذا الرقم يعمل على مدار 24 ساعة.</p>
+            </div>
+            <div class="emergency-buttons-grid">
+                <a href="tel:123" class="emergency-btn emergency-btn--red">
+                    <span class="emergency-btn__icon">🚨</span>
+                    <span class="emergency-btn__content">
+                        <strong>الطوارئ العامة</strong>
+                        <span class="emergency-btn__number">123</span>
+                        <small>رقم الطوارئ الموحد - إسعاف - مستشفيات</small>
+                    </span>
+                </a>
+            </div>
+        </section>
+
+        <section id="mapSection" class="section" aria-labelledby="mapHeading">
+            <div class="section__header">
+                <h2 id="mapHeading">أقرب المستشفيات والمراكز الطبية في بنها</h2>
+                <p>نحدد موقعك بإذن منك ثم نعرض أفضل الخيارات القريبة مع أرقام الطوارئ.</p>
+            </div>
+            
+            <div class="map-layout">
+                <div class="map-container">
+                    <!-- خريطة Google المدمجة -->
+                    <div class="emergency-map-container">
+                        <h3>🏥 خريطة المستشفيات</h3>
+                        <div class="map-iframe-wrapper">
+                            <iframe 
+                                src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d110502.603895292!2d31.340867074249026!3d30.059618470158!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1shospitals!5e0!3m2!1sen!2seg!4v1691234567890" 
+                                class="emergency-map-iframe"
+                                allowfullscreen="" 
+                                loading="lazy" 
+                                referrerpolicy="no-referrer-when-downgrade">
+                            </iframe>
+                        </div>
+                        <div class="map-note">
+                            خريطة توضح مواقع المستشفيات والمراكز الطبية في القاهرة
+                        </div>
+                    </div>
+                </div>
+                
+                <aside class="emergency-sidebar">
+                    <div class="info-card">
+                        <h3>💡 معلومات مهمة</h3>
+                        <ul class="info-list">
+                            <li>✅ الخريطة تعرض أقرب المستشفيات لموقعك الحالي</li>
+                            <li>📍 يمكنك رؤية موقعك الحالي على الخريطة</li>
+                            <li>📞 احفظ رقم الطوارئ الموحد 123 للاستخدام السريع</li>
+                            <li>🕒 معظم المستشفيات تقدم خدمة الطوارئ 24 ساعة</li>
+                            <li>🚑 اتصل مباشرة برقم 123 في الحالات الطارئة</li>
+                        </ul>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+        <section id="about" class="section" aria-labelledby="aboutHeading">
+            <div class="section__header">
+                <h2 id="aboutHeading">عن منصة تشخيص فوري للأعراض</h2>
+                <p>رحلتنا نحو تمكين المستخدم العربي من الوصول إلى معلومات صحية موثوقة.</p>
+            </div>
+            <div class="about-layout">
+                <div class="about-text">
+                    <p>تم تطوير منصة تشخيص فوري للأعراض لتكون مرجعًا موثوقًا وواجهة سهلة الاستخدام تساعد الأفراد على فهم حالتهم الصحية الأولية قبل زيارة الطبيب المختص.</p>
+                    <div class="pill-group">
+                        <span class="pill">دقة عالية</span>
+                        <span class="pill">تحديث دوري</span>
+                        <span class="pill">محتوى عربي</span>
+                        <span class="pill">دعم 24/7</span>
+                    </div>
+                </div>
+                <div class="about-accordion">
+                    <button class="accordion-toggle" type="button" aria-expanded="false" aria-controls="privacyPanel">الخصوصية</button>
+                    <div id="privacyPanel" class="accordion-panel" hidden>
+                        <p>نلتزم بحماية بيانات المستخدمين وتخزينها بصورة آمنة وعدم مشاركتها إلا بإذن صريح.</p>
+                    </div>
+                    <button class="accordion-toggle" type="button" aria-expanded="false" aria-controls="termsPanel">الشروط والأحكام</button>
+                    <div id="termsPanel" class="accordion-panel" hidden>
+                        <p>نتائج المنصة استرشادية ولا تغني عن التشخيص السريري. باستخدامك للمنصة فإنك توافق على ذلك.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>© 2025 تشخيص فوري للأعراض. جميع الحقوق محفوظة.</p>
+    </footer>
+
+    <script src="app.js" defer></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap"></script>
+</body>
+</html>
