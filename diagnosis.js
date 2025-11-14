@@ -10,7 +10,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const addSymptomBtn = document.getElementById("addSymptomBtn");
     const selectedSymptomsContainer = document.getElementById("selectedSymptoms");
     const suggestionChips = document.getElementById("suggestionChips");
-    const departmentSelect = document.getElementById("departmentSelect");
     const clearSymptomsBtn = document.getElementById("clearSymptomsBtn");
     const resultsContainer = document.getElementById("diagnosisResults");
     const historyList = document.getElementById("historyList");
@@ -145,7 +144,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return [];
         }
         const selectedLower = Array.from(selectedSymptoms).map((sym) => sym.toLowerCase());
-        const departmentOverride = departmentSelect.value;
+        const departmentOverride = departmentSelect?.value;
 
         const matches = diseases
             .map((disease) => {
@@ -243,10 +242,28 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
+    // ⭐ دالة جديدة للتمرير إلى قسم النتائج
+    function scrollToResults() {
+        setTimeout(() => {
+            const resultsSection = document.getElementById('resultsSection');
+            if (resultsSection) {
+                const yOffset = -80; // تعويض للهيدر الثابت
+                const y = resultsSection.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                
+                window.scrollTo({
+                    top: y,
+                    behavior: 'smooth'
+                });
+            }
+        }, 100);
+    }
+
     symptomForm?.addEventListener("submit", (event) => {
         event.preventDefault();
         if (!selectedSymptoms.size) {
             renderResults([]);
+            // التمرير حتى مع عدم وجود نتائج
+            scrollToResults();
             return;
         }
         const matches = matchDiseases();
@@ -264,6 +281,9 @@ document.addEventListener("DOMContentLoaded", () => {
             saveHistory(entry);
             renderHistory();
         }
+
+        // ⭐ التمرير إلى النتائج بعد عرضها
+        scrollToResults();
     });
 
     // تشغيل البداية
