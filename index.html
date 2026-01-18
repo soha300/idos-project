@@ -1,34 +1,31 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>تشخيص فوري للأعراض | الصفحة الرئيسية</title>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --primary-light: #818cf8;
-            --secondary: #10b981;
-            --secondary-dark: #059669;
-            --accent: #f59e0b;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --success: #10b981;
-            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            --gradient-accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-            --gradient-dark: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
-            --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.08);
-            --shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
-            --shadow-md: 0 15px 35px rgba(0, 0, 0, 0.15);
-            --shadow-lg: 0 25px 50px rgba(0, 0, 0, 0.2);
-            --shadow-xl: 0 35px 60px rgba(0, 0, 0, 0.25);
-            --radius: 16px;
-            --radius-lg: 20px;
-            --radius-xl: 28px;
+            --primary: #8A2BE2; /* تغيير الأزرق إلى بنفسجي */
+            --primary-dark: #6A1B9A; /* بنفسجي داكن */
+            --primary-light: #9C4DF4; /* بنفسجي فاتح */
+            --secondary: #D8BFD8; /* لافندر فاتح */
+            --accent: #FF6B8B; /* وردي */
+            --success: #57CC99;
+            --warning: #FFD166;
+            --light: #F8F9FA;
+            --dark: #212529;
+            --gray: #6C757D;
+            --gradient-primary: linear-gradient(135deg, #8A2BE2 0%, #6A1B9A 100%); /* تغيير التدرج إلى بنفسجي */
+            --gradient-secondary: linear-gradient(135deg, #D8BFD8 0%, #8A2BE2 100%); /* تغيير التدرج إلى بنفسجي */
+            --gradient-accent: linear-gradient(135deg, #FF6B8B 0%, #E63946 100%);
+            --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.05);
+            --shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 15px 35px rgba(0, 0, 0, 0.15);
+            --radius: 12px;
+            --radius-lg: 16px;
         }
 
         * {
@@ -43,1507 +40,802 @@
 
         body {
             font-family: 'Cairo', sans-serif;
-            line-height: 1.7;
-            color: #2d3748;
-            background: #f8fafc;
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: #f8fafc;
             overflow-x: hidden;
         }
 
-        /* Preloader */
-        #preloader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--gradient-primary);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            transition: opacity 0.5s ease;
-        }
-
-        .loader {
-            text-align: center;
-            color: white;
-        }
-
-        .loader__pulse {
-            width: 100px;
-            height: 100px;
-            margin: 0 auto 25px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: pulse 2s infinite ease-in-out;
-            box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
-        }
-
-        .loader__pulse i {
-            font-size: 2.5rem;
-        }
-
-        .loader__text {
-            font-size: 1.3rem;
-            font-weight: 600;
-            letter-spacing: 1px;
-        }
-
-        @keyframes pulse {
-            0% {
-                transform: scale(0.8);
-                opacity: 0.7;
-            }
-            50% {
-                transform: scale(1.1);
-                opacity: 1;
-            }
-            100% {
-                transform: scale(0.8);
-                opacity: 0.7;
-            }
-        }
-
-        body.loading {
-            overflow: hidden;
-        }
-
-        body:not(.loading) #preloader {
-            opacity: 0;
-            visibility: hidden;
-        }
-
         /* Header */
-        .site-header {
-            background-color: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(15px);
+        .header {
+            background: white;
             box-shadow: var(--shadow-sm);
             position: sticky;
             top: 0;
             z-index: 100;
-            transition: all 0.4s ease;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 1rem 0;
         }
 
-        .nav-container {
-            max-width: 1300px;
+        .header-container {
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 0 2rem;
+            padding: 0 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            height: 85px;
         }
 
-        .brand {
+        .logo {
             display: flex;
             align-items: center;
             text-decoration: none;
-            font-weight: 900;
-            font-size: 1.8rem;
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            position: relative;
         }
 
-        .brand__icon {
-            margin-left: 0.7rem;
-            font-size: 2.2rem;
+        .logo-icon {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-left: 0.5rem;
         }
 
-        .brand::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            right: 0;
-            width: 40px;
-            height: 4px;
-            background: var(--gradient-primary);
-            border-radius: 2px;
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
         }
 
-        .main-nav ul {
+        .nav-menu {
             display: flex;
             list-style: none;
             gap: 2rem;
         }
 
-        .main-nav a {
+        .nav-link {
             text-decoration: none;
-            color: #4a5568;
-            font-weight: 700;
-            padding: 0.7rem 1.2rem;
-            border-radius: 50px;
-            transition: all 0.4s ease;
-            position: relative;
-            font-size: 1.05rem;
+            color: var(--dark);
+            font-weight: 600;
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        .main-nav a:hover {
+        .nav-link:hover, .nav-link.active {
             color: var(--primary);
-            transform: translateY(-3px);
         }
 
-        .main-nav a.is-active {
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--light);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
             background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: white;
-            box-shadow: var(--shadow);
+            font-weight: 700;
         }
 
-        .nav-toggle {
+        .mobile-menu-btn {
             display: none;
             background: none;
             border: none;
-            cursor: pointer;
-            width: 35px;
-            height: 35px;
-            position: relative;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .nav-toggle__line {
-            display: block;
-            height: 3px;
-            width: 100%;
-            background: var(--gradient-primary);
-            margin: 3px 0;
-            transition: all 0.3s ease;
-            border-radius: 3px;
-        }
-
-        .mobile-nav {
-            background-color: white;
-            box-shadow: var(--shadow-md);
-            padding: 1.5rem;
-            display: none;
-            border-radius: 0 0 var(--radius) var(--radius);
-        }
-
-        .mobile-nav ul {
-            list-style: none;
-        }
-
-        .mobile-nav li {
-            margin-bottom: 0.7rem;
-        }
-
-        .mobile-nav a {
-            display: block;
-            padding: 1rem 1.5rem;
-            text-decoration: none;
-            color: #4a5568;
-            border-radius: var(--radius);
-            transition: all 0.3s ease;
-            font-weight: 700;
-            font-size: 1.1rem;
-        }
-
-        .mobile-nav a:hover, .mobile-nav a.is-active {
-            background: var(--gradient-primary);
-            color: white;
-            transform: translateX(-10px);
-        }
-
-        /* Main content */
-        main {
-            max-width: 1300px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        .section {
-            padding: 6rem 0;
-        }
-
-        .section__header {
-            text-align: center;
-            margin-bottom: 5rem;
-        }
-
-        .section__header h2 {
-            font-size: 3rem;
-            color: #1a202c;
-            margin-bottom: 1.5rem;
-            position: relative;
-            display: inline-block;
-            font-weight: 800;
-        }
-
-        .section__header h2::after {
-            content: '';
-            position: absolute;
-            bottom: -15px;
-            right: 50%;
-            transform: translateX(50%);
-            width: 100px;
-            height: 6px;
-            background: var(--gradient-primary);
-            border-radius: 3px;
-        }
-
-        .section__header p {
-            font-size: 1.3rem;
-            color: #718096;
-            max-width: 700px;
-            margin: 0 auto;
-            line-height: 1.8;
-        }
-
-        /* About Icon Section */
-        .about-icon-section {
-            text-align: center;
-            margin: 3rem 0;
-            cursor: pointer;
-            padding: 2rem;
-            border-radius: var(--radius-xl);
-            background: rgba(99, 102, 241, 0.05);
-            transition: all 0.4s ease;
-            border: 2px dashed rgba(99, 102, 241, 0.2);
-        }
-
-        .about-icon-section:hover {
-            background: rgba(99, 102, 241, 0.1);
-            transform: translateY(-5px);
-            box-shadow: var(--shadow);
-        }
-
-        .about-icon {
-            font-size: 4rem;
-            color: var(--primary);
-            margin-bottom: 1.5rem;
-            transition: all 0.4s ease;
-            display: inline-block;
-        }
-
-        .about-icon:hover {
-            transform: scale(1.2) rotate(10deg);
-            color: var(--primary-dark);
-        }
-
-        .about-icon-text {
             font-size: 1.5rem;
-            font-weight: 700;
-            color: #4a5568;
-        }
-
-        .about-icon-hint {
-            font-size: 1rem;
-            color: #718096;
-            margin-top: 0.5rem;
-            font-weight: 600;
+            color: var(--dark);
+            cursor: pointer;
         }
 
         /* Hero Section */
         .hero {
-            display: grid;
-            grid-template-columns: 1.2fr 1fr;
-            gap: 5rem;
-            align-items: center;
-            padding: 8rem 0;
-            min-height: 100vh;
+            background: var(--gradient-primary);
+            color: white;
+            padding: 5rem 0;
             position: relative;
+            overflow: hidden;
         }
 
         .hero::before {
             content: '';
             position: absolute;
-            top: -10%;
-            left: -10%;
-            width: 500px;
-            height: 500px;
+            top: -50%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
             border-radius: 50%;
-            background: var(--gradient-accent);
-            opacity: 0.1;
-            filter: blur(80px);
-            z-index: -1;
+            background: rgba(255, 255, 255, 0.05);
         }
 
         .hero::after {
             content: '';
             position: absolute;
-            bottom: -10%;
-            right: -10%;
+            bottom: -30%;
+            left: -10%;
             width: 400px;
             height: 400px;
             border-radius: 50%;
-            background: var(--gradient-secondary);
-            opacity: 0.1;
-            filter: blur(80px);
-            z-index: -1;
+            background: rgba(255, 255, 255, 0.05);
         }
 
-        .hero__content {
-            padding: 2rem 0;
+        .hero-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+            position: relative;
+            z-index: 1;
         }
 
-        .hero__badge {
+        .hero-content {
+            padding: 1rem 0;
+        }
+
+        .hero-badge {
             display: inline-block;
-            background: var(--gradient-primary);
+            background: rgba(255, 255, 255, 0.2);
             color: white;
-            padding: 0.7rem 1.8rem;
+            padding: 0.5rem 1.2rem;
             border-radius: 50px;
-            font-size: 1rem;
-            font-weight: 700;
-            margin-bottom: 2rem;
-            box-shadow: var(--shadow);
-            letter-spacing: 0.5px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            backdrop-filter: blur(10px);
         }
 
-        .hero h1 {
-            font-size: 4rem;
+        .hero-title {
+            font-size: 3rem;
             line-height: 1.2;
-            color: #1a202c;
-            margin-bottom: 2rem;
-            font-weight: 900;
+            margin-bottom: 1.5rem;
+            font-weight: 800;
         }
 
-        .hero h1 span {
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .hero-description {
+            font-size: 1.2rem;
+            margin-bottom: 2.5rem;
+            opacity: 0.9;
         }
 
-        .hero p {
-            font-size: 1.4rem;
-            color: #718096;
-            margin-bottom: 3rem;
-            line-height: 1.8;
-        }
-
-        .hero__actions {
+        .hero-actions {
             display: flex;
-            gap: 1.5rem;
-            margin-bottom: 4rem;
+            gap: 1rem;
+            margin-bottom: 3rem;
         }
 
         .btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            padding: 1.2rem 2.5rem;
-            border-radius: 50px;
-            font-weight: 800;
+            padding: 1rem 2rem;
+            border-radius: var(--radius);
+            font-weight: 700;
             text-decoration: none;
-            transition: all 0.4s ease;
+            transition: all 0.3s ease;
             border: none;
             cursor: pointer;
             font-family: inherit;
-            font-size: 1.2rem;
-            gap: 0.8rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateX(-100%);
-            transition: transform 0.5s ease;
-        }
-
-        .btn:hover::before {
-            transform: translateX(0);
+            font-size: 1rem;
+            gap: 0.7rem;
         }
 
         .btn-primary {
-            background: var(--gradient-primary);
-            color: white;
+            background: white;
+            color: var(--primary);
             box-shadow: var(--shadow);
         }
 
         .btn-primary:hover {
-            transform: translateY(-7px) scale(1.03);
+            transform: translateY(-3px);
             box-shadow: var(--shadow-lg);
         }
 
-        .btn-ghost {
-            background-color: transparent;
-            color: var(--primary);
-            border: 3px solid var(--primary);
-            font-weight: 700;
-        }
-
-        .btn-ghost:hover {
-            background: var(--gradient-primary);
+        .btn-outline {
+            background: transparent;
             color: white;
-            transform: translateY(-7px);
-            box-shadow: var(--shadow);
+            border: 2px solid rgba(255, 255, 255, 0.3);
         }
 
-        .hero__stats {
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .hero-stats {
             display: flex;
-            gap: 4rem;
-        }
-
-        .hero__stats div {
-            text-align: center;
-        }
-
-        .hero__stats h3 {
-            font-size: 3rem;
-            color: var(--primary);
-            margin-bottom: 0.7rem;
-            font-weight: 900;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .hero__stats p {
-            font-size: 1.1rem;
-            color: #718096;
-            margin: 0;
-            font-weight: 600;
-        }
-
-        .hero__visual {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2.5rem;
-            position: relative;
-        }
-
-        .pulse-card {
-            background: white;
-            border-radius: var(--radius-xl);
-            padding: 3rem 2.5rem;
-            box-shadow: var(--shadow-lg);
-            text-align: center;
-            transition: all 0.5s ease;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .pulse-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 100%;
-            height: 6px;
-            background: var(--gradient-primary);
-        }
-
-        .pulse-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--gradient-primary);
-            opacity: 0;
-            transition: opacity 0.4s ease;
-            z-index: -1;
-        }
-
-        .pulse-card:hover::after {
-            opacity: 0.05;
-        }
-
-        .pulse-card:hover {
-            transform: translateY(-15px) scale(1.05);
-            box-shadow: var(--shadow-xl);
-        }
-
-        .pulse-card span {
-            font-size: 4rem;
-            display: block;
-            margin-bottom: 2rem;
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.1));
-        }
-
-        .pulse-card strong {
-            display: block;
-            font-size: 1.7rem;
-            margin-bottom: 1rem;
-            color: #1a202c;
-            font-weight: 800;
-        }
-
-        .pulse-card p {
-            color: #718096;
-            font-size: 1.1rem;
-            line-height: 1.7;
-        }
-
-        /* Features Grid */
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 3rem;
-        }
-
-        .feature {
-            background: white;
-            border-radius: var(--radius-xl);
-            padding: 3.5rem 2.5rem;
-            box-shadow: var(--shadow);
-            transition: all 0.5s ease;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .feature::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 100%;
-            height: 6px;
-            background: var(--gradient-primary);
-        }
-
-        .feature::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--gradient-primary);
-            opacity: 0;
-            transition: opacity 0.4s ease;
-            z-index: -1;
-        }
-
-        .feature:hover::after {
-            opacity: 0.05;
-        }
-
-        .feature:hover {
-            transform: translateY(-12px);
-            box-shadow: var(--shadow-xl);
-        }
-
-        .feature__icon {
-            font-size: 4rem;
-            margin-bottom: 2rem;
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.1));
-        }
-
-        .feature h3 {
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
-            color: #1a202c;
-            font-weight: 800;
-        }
-
-        .feature p {
-            color: #718096;
-            margin-bottom: 2rem;
-            font-size: 1.2rem;
-            line-height: 1.7;
-        }
-
-        .link {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 800;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.7rem;
-            transition: all 0.4s ease;
-            font-size: 1.1rem;
-            position: relative;
-        }
-
-        .link::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            right: 0;
-            width: 0;
-            height: 3px;
-            background: var(--gradient-primary);
-            transition: width 0.4s ease;
-            border-radius: 2px;
-        }
-
-        .link:hover {
-            gap: 1.2rem;
-        }
-
-        .link:hover::after {
-            width: 100%;
-        }
-
-        /* Vitals Section */
-        .panel-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 3rem;
-        }
-
-        .panel {
-            background: white;
-            border-radius: var(--radius-xl);
-            box-shadow: var(--shadow-lg);
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .panel--primary {
-            border-top: 6px solid;
-            border-image: var(--gradient-primary) 1;
-        }
-
-        .panel__header {
-            padding: 2.5rem 3rem;
-            background: var(--gradient-primary);
-            color: white;
-        }
-
-        .panel__header h3 {
-            color: white;
-            font-size: 1.8rem;
-            font-weight: 800;
-        }
-
-        .vitals-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2.5rem;
-            padding: 3rem;
-        }
-
-        .vital-card {
-            display: flex;
-            align-items: center;
-            padding: 2.5rem;
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-            border-radius: var(--radius-lg);
-            transition: all 0.4s ease;
-            border-left: 5px solid var(--primary);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .vital-card:hover {
-            background: white;
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .vital-card__icon {
-            font-size: 3.5rem;
-            margin-left: 2rem;
-            background: var(--gradient-primary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.1));
-        }
-
-        .vital-card h4 {
-            color: #4a5568;
-            margin-bottom: 0.7rem;
-            font-size: 1.3rem;
-            font-weight: 700;
-        }
-
-        .vital-card p {
-            font-size: 2.2rem;
-            font-weight: 900;
-            color: #1a202c;
-            margin-bottom: 0.7rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .vital-chip {
-            display: inline-block;
-            padding: 0.7rem 1.3rem;
-            border-radius: 50px;
-            font-size: 1rem;
-            font-weight: 800;
-            background: var(--success);
-            color: white;
-            box-shadow: var(--shadow-sm);
-        }
-
-        /* Emergency Section */
-        .emergency-buttons-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 2.5rem;
-        }
-
-        .emergency-btn {
-            display: flex;
-            align-items: center;
-            padding: 2.5rem;
-            background: white;
-            border-radius: var(--radius-xl);
-            box-shadow: var(--shadow-lg);
-            text-decoration: none;
-            transition: all 0.5s ease;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .emergency-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            right: 0;
-            width: 100%;
-            height: 6px;
-            background: var(--gradient-secondary);
-        }
-
-        .emergency-btn::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--gradient-secondary);
-            opacity: 0;
-            transition: opacity 0.4s ease;
-            z-index: -1;
-        }
-
-        .emergency-btn:hover::after {
-            opacity: 0.05;
-        }
-
-        .emergency-btn:hover {
-            transform: translateY(-10px) scale(1.03);
-            box-shadow: var(--shadow-xl);
-        }
-
-        .emergency-btn--red {
-            border-color: var(--danger);
-        }
-
-        .emergency-btn__icon {
-            font-size: 4rem;
-            margin-left: 2.5rem;
-            background: var(--gradient-secondary);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.1));
-        }
-
-        .emergency-btn__content {
-            flex: 1;
-        }
-
-        .emergency-btn__content strong {
-            display: block;
-            font-size: 1.7rem;
-            color: #1a202c;
-            margin-bottom: 0.7rem;
-            font-weight: 800;
-        }
-
-        .emergency-btn__number {
-            display: block;
-            font-size: 3rem;
-            font-weight: 900;
-            color: var(--danger);
-            margin-bottom: 0.7rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .emergency-btn small {
-            color: #718096;
-            font-size: 1.1rem;
-        }
-
-        /* Map Section */
-        .map-layout {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 3rem;
-        }
-
-        .map-container {
-            background: white;
-            border-radius: var(--radius-xl);
-            box-shadow: var(--shadow-lg);
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .emergency-map-container {
-            padding: 2.5rem;
-        }
-
-        .emergency-map-container h3 {
-            margin-bottom: 2rem;
-            color: #1a202c;
-            font-size: 1.8rem;
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            font-weight: 800;
-        }
-
-        .map-iframe-wrapper {
-            position: relative;
-            height: 500px;
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-            box-shadow: var(--shadow);
-        }
-
-        .emergency-map-iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        .map-note {
-            margin-top: 2rem;
-            text-align: center;
-            color: #718096;
-            font-size: 1.1rem;
-            padding: 1.5rem;
-            background: #f8fafc;
-            border-radius: var(--radius);
-            font-weight: 600;
-        }
-
-        .emergency-sidebar {
-            display: flex;
-            flex-direction: column;
-            gap: 2.5rem;
-        }
-
-        .info-card {
-            background: white;
-            border-radius: var(--radius-xl);
-            box-shadow: var(--shadow-lg);
-            padding: 2.5rem;
-            border-top: 6px solid;
-            border-image: var(--gradient-primary) 1;
-        }
-
-        .info-card h3 {
-            margin-bottom: 2rem;
-            color: #1a202c;
-            font-size: 1.7rem;
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            font-weight: 800;
-        }
-
-        .info-list {
-            list-style: none;
-        }
-
-        .info-list li {
-            padding: 1.2rem 0;
-            border-bottom: 1px solid #e2e8f0;
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            font-size: 1.2rem;
-            font-weight: 600;
-        }
-
-        .info-list li:last-child {
-            border-bottom: none;
-        }
-
-        /* About Section */
-        .about-layout {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 5rem;
-            align-items: start;
-        }
-
-        .about-text p {
-            margin-bottom: 2rem;
-            color: #4a5568;
-            font-size: 1.3rem;
-            line-height: 1.9;
-        }
-
-        .pill-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1.2rem;
-            margin-top: 2.5rem;
-        }
-
-        .pill {
-            display: inline-block;
-            padding: 1rem 2rem;
-            background: var(--gradient-primary);
-            color: white;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: 800;
-            box-shadow: var(--shadow);
-            transition: all 0.3s ease;
-        }
-
-        .pill:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .about-accordion {
-            display: flex;
-            flex-direction: column;
             gap: 2rem;
         }
 
-        .accordion-toggle {
-            background: white;
-            border: none;
-            padding: 1.8rem 2.5rem;
-            text-align: right;
-            font-size: 1.4rem;
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
             font-weight: 800;
-            color: #1a202c;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow);
-            cursor: pointer;
-            transition: all 0.4s ease;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .hero-visual {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
         }
 
-        .accordion-toggle::after {
-            content: '+';
-            font-size: 2rem;
-            font-weight: 400;
+        .hero-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            box-shadow: var(--shadow-lg);
+            color: var(--dark);
+            text-align: center;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .hero-card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
             color: var(--primary);
-            transition: all 0.3s ease;
         }
 
-        .accordion-toggle[aria-expanded="true"]::after {
-            content: '-';
-            transform: rotate(180deg);
+        .hero-card-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
         }
 
-        .accordion-toggle:hover {
+        .hero-card-description {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+        }
+
+        /* Sections */
+        .section {
+            padding: 5rem 0;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            color: var(--dark);
+            margin-bottom: 1rem;
+            font-weight: 800;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            right: 50%;
+            transform: translateX(50%);
+            width: 80px;
+            height: 4px;
             background: var(--gradient-primary);
-            color: white;
+            border-radius: 2px;
+        }
+
+        .section-description {
+            font-size: 1.2rem;
+            color: var(--gray);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Features */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 2.5rem 2rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            text-align: center;
+            border-top: 4px solid var(--primary);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .feature-description {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: gap 0.3s;
+        }
+
+        .feature-link:hover {
+            gap: 0.8rem;
+        }
+
+        /* Services */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .service-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .service-card:hover {
             transform: translateY(-5px);
             box-shadow: var(--shadow-lg);
         }
 
-        .accordion-toggle:hover::after {
+        .service-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+
+        .service-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .service-description {
+            color: var(--gray);
+        }
+
+        /* Emergency */
+        .emergency-section {
+            background: var(--gradient-accent);
             color: white;
+            padding: 4rem 0;
+            text-align: center;
         }
 
-        .accordion-panel {
-            padding: 0;
-            background: white;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow);
-            overflow: hidden;
-            max-height: 0;
-            transition: max-height 0.5s ease;
+        .emergency-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 800;
         }
 
-        .accordion-panel:not([hidden]) {
-            max-height: 300px;
-        }
-
-        .accordion-panel p {
-            padding: 2.5rem;
-            color: #4a5568;
-            line-height: 1.8;
+        .emergency-description {
             font-size: 1.2rem;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .emergency-number {
+            font-size: 3.5rem;
+            font-weight: 900;
+            margin-bottom: 2rem;
+            display: block;
+        }
+
+        .emergency-btn {
+            background: white;
+            color: var(--accent);
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            font-weight: 800;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.7rem;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+        }
+
+        .emergency-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
         }
 
         /* Footer */
-        .site-footer {
-            background: var(--gradient-dark);
+        .footer {
+            background: var(--dark);
             color: white;
+            padding: 4rem 0 2rem;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
             text-align: center;
-            padding: 4rem 1rem;
-            margin-top: 6rem;
-            position: relative;
-            overflow: hidden;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
         }
 
-        .site-footer::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -20%;
-            width: 300px;
-            height: 300px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .site-footer p {
-            font-size: 1.2rem;
-            font-weight: 600;
-            position: relative;
-            z-index: 1;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 1200px) {
-            .hero {
+        /* Responsive */
+        @media (max-width: 992px) {
+            .hero-container {
                 grid-template-columns: 1fr;
                 text-align: center;
             }
             
-            .hero__visual {
+            .hero-visual {
                 order: -1;
-                max-width: 600px;
-                margin: 0 auto;
             }
             
-            .map-layout {
-                grid-template-columns: 1fr;
-            }
-            
-            .about-layout {
-                grid-template-columns: 1fr;
+            .hero-title {
+                font-size: 2.5rem;
             }
         }
 
         @media (max-width: 768px) {
-            .main-nav {
+            .nav-menu {
                 display: none;
             }
             
-            .nav-toggle {
-                display: flex;
-            }
-            
-            .mobile-nav:not([hidden]) {
+            .mobile-menu-btn {
                 display: block;
             }
             
-            .hero h1 {
-                font-size: 3rem;
-            }
-            
-            .hero__actions {
-                flex-direction: column;
-            }
-            
-            .hero__stats {
-                justify-content: center;
-            }
-            
-            .feature-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .vitals-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .emergency-buttons-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .section__header h2 {
-                font-size: 2.5rem;
-            }
-            
-            .nav-container {
-                padding: 0 1.5rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-            
-            .hero p {
-                font-size: 1.2rem;
-            }
-            
-            .section__header h2 {
+            .hero-title {
                 font-size: 2rem;
             }
             
-            .hero__visual {
-                grid-template-columns: 1fr;
-            }
-            
-            .hero__stats {
+            .hero-actions {
                 flex-direction: column;
-                gap: 2rem;
+                align-items: center;
             }
             
-            .emergency-buttons-grid {
-                grid-template-columns: 1fr;
+            .hero-stats {
+                justify-content: center;
+            }
+            
+            .section-title {
+                font-size: 2rem;
             }
         }
 
-        /* Utility Classes */
-        .sr-only {
-            position: absolute;
-            width: 1px;
-            height: 1px;
-            padding: 0;
-            margin: -1px;
-            overflow: hidden;
-            clip: rect(0, 0, 0, 0);
-            white-space: nowrap;
-            border: 0;
+        @media (max-width: 576px) {
+            .hero {
+                padding: 3rem 0;
+            }
+            
+            .section {
+                padding: 3rem 0;
+            }
+            
+            .hero-stats {
+                flex-direction: column;
+                gap: 1.5rem;
+            }
+            
+            .emergency-number {
+                font-size: 2.5rem;
+            }
         }
     </style>
 </head>
-<body class="loading">
-    <div id="preloader" aria-hidden="true">
-        <div class="loader">
-            <div class="loader__pulse">
-                <i class="fas fa-heartbeat"></i>
-            </div>
-            <span class="loader__text">يتم تحميل المنصة الصحية...</span>
-        </div>
-    </div>
-
-    <header class="site-header">
-        <div class="nav-container">
-            <a class="brand" href="index.html">
-                <span class="brand__icon" aria-hidden="true"><i class="fas fa-stethoscope"></i></span>
-                <span class="brand__text">تشخيص فوري</span>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-stethoscope logo-icon"></i>
+                <span class="logo-text">تشخيص فوري</span>
             </a>
-            <nav class="main-nav" aria-label="القائمة الرئيسية">
-                <ul>
-                    <li><a href="index.html" class="is-active">الرئيسية</a></li>
-                    <li><a href="diagnosis.html">التشخيص</a></li>
-                    <li><a href="chat.html">محادثة AI</a></li>
-                    <li><a href="index.html#about">عن التطبيق</a></li>
+            
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link active"><i class="fas fa-home"></i> الرئيسية</a></li>
+                    <li><a href="diagnosis.html" class="nav-link"><i class="fas fa-diagnoses"></i> التشخيص</a></li>
+                    <li><a href="chat.html" class="nav-link"><i class="fas fa-robot"></i> محادثة AI</a></li>
+                    <li><a href="hospitals.html" class="nav-link"><i class="fas fa-hospital"></i> المستشفيات</a></li>
+                    <li><a href="settings.html" class="nav-link"><i class="fas fa-cog"></i> الإعدادات</a></li>
                 </ul>
             </nav>
-            <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="mobileMenu">
-                <span class="nav-toggle__line"></span>
-                <span class="nav-toggle__line"></span>
-                <span class="nav-toggle__line"></span>
-                <span class="sr-only">فتح القائمة</span>
-            </button>
-        </div>
-        <div id="mobileMenu" class="mobile-nav" hidden>
-            <nav aria-label="القائمة الجانبية">
-                <ul>
-                    <li><a href="index.html" class="is-active"><i class="fas fa-home"></i> الرئيسية</a></li>
-                    <li><a href="diagnosis.html"><i class="fas fa-diagnoses"></i> التشخيص</a></li>
-                    <li><a href="chat.html"><i class="fas fa-robot"></i> محادثة AI</a></li>
-                    <li><a href="index.html#about"><i class="fas fa-info-circle"></i> عن التطبيق</a></li>
-                </ul>
-            </nav>
+            
+            <div class="user-actions">
+                <div class="user-profile">
+                    <div class="user-avatar">م</div>
+                    <span>مستخدم</span>
+                </div>
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
         </div>
     </header>
 
-    <main class="page" id="mainContent">
-        <!-- أيقونة عن التطبيق -->
-        <div class="about-icon-section" id="aboutIcon">
-            <div class="about-icon">
-                <i class="fas fa-info-circle"></i>
-            </div>
-            <div class="about-icon-text">عن التطبيق</div>
-            <div class="about-icon-hint">انقر هنا لمعرفة المزيد عن منصتنا</div>
-        </div>
-
-        <!-- قسم "عن التطبيق" (مخفي في البداية) -->
-        <section id="about" class="section" aria-labelledby="aboutHeading" style="display: none;">
-            <div class="section__header">
-                <h2 id="aboutHeading">عن منصة تشخيص فوري للأعراض</h2>
-                <p>رحلتنا نحو تمكين المستخدم العربي من الوصول إلى معلومات صحية موثوقة.</p>
-            </div>
-            <div class="about-layout">
-                <div class="about-text">
-                    <p>تم تطوير منصة تشخيص فوري للأعراض لتكون مرجعًا موثوقًا وواجهة سهلة الاستخدام تساعد الأفراد على فهم حالتهم الصحية الأولية قبل زيارة الطبيب المختص.</p>
-                    <div class="pill-group">
-                        <span class="pill"><i class="fas fa-bullseye"></i> دقة عالية</span>
-                        <span class="pill"><i class="fas fa-sync-alt"></i> تحديث دوري</span>
-                        <span class="pill"><i class="fas fa-language"></i> محتوى عربي</span>
-                        <span class="pill"><i class="fas fa-headset"></i> دعم 24/7</span>
-                    </div>
-                </div>
-                <div class="about-accordion">
-                    <button class="accordion-toggle" type="button" aria-expanded="false" aria-controls="privacyPanel"><i class="fas fa-shield-alt"></i> الخصوصية</button>
-                    <div id="privacyPanel" class="accordion-panel" hidden>
-                        <p>نلتزم بحماية بيانات المستخدمين وتخزينها بصورة آمنة وعدم مشاركتها إلا بإذن صريح.</p>
-                    </div>
-                    <button class="accordion-toggle" type="button" aria-expanded="false" aria-controls="termsPanel"><i class="fas fa-file-contract"></i> الشروط والأحكام</button>
-                    <div id="termsPanel" class="accordion-panel" hidden>
-                        <p>نتائج المنصة استرشادية ولا تغني عن التشخيص السريري. باستخدامك للمنصة فإنك توافق على ذلك.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="hero">
-            <div class="hero__content">
-                <span class="hero__badge"><i class="fas fa-bolt"></i> منصة صحة رقمية متكاملة</span>
-                <h1>تشخيص <span>ذكي</span> للأعراض مع متابعة فورية لحالتك الصحية</h1>
-                <p>ابدأ رحلتك مع منصة تشخيص فوري للأعراض لتحصل على توصيات دقيقة، خريطة للمستشفيات القريبة، ومحادثة مع مساعد طبي ذكي.</p>
-                <div class="hero__actions">
-                    <a class="btn btn-primary" href="diagnosis.html"><i class="fas fa-stethoscope"></i> ابدأ التشخيص الآن</a>
-                    <a class="btn btn-ghost" href="chat.html"><i class="fas fa-robot"></i> تحدث مع المساعد الذكي</a>
-                </div>
-                <div class="hero__stats">
-                    <div>
-                        <h3>120K+</h3>
-                        <p>جلسة تشخيص ناجحة</p>
-                    </div>
-                    <div>
-                        <h3>95%</h3>
-                        <p>رضا المستخدمين</p>
-                    </div>
-                    <div>
-                        <h3>24/7</h3>
-                        <p>دعم واستشارات</p>
-                    </div>
-                </div>
-            </div>
-            <div class="hero__visual" aria-hidden="true">
-                <div class="pulse-card">
-                    <span><i class="fas fa-x-ray"></i></span>
-                    <strong>فحص سريع</strong>
-                    <p>نتائج أولية متكاملة في دقائق معدودة</p>
-                </div>
-                <div class="pulse-card">
-                    <span><i class="fas fa-brain"></i></span>
-                    <strong>تحليل AI</strong>
-                    <p>مقاربات دقيقة للأعراض باستخدام الذكاء الاصطناعي</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="section" aria-labelledby="highlights">
-            <div class="section__header">
-                <h2 id="highlights">خدمات المنصة</h2>
-                <p>مجموعة أدوات متكاملة لمتابعة صحتك من مكان واحد.</p>
-            </div>
-            <div class="feature-grid">
-                <article class="feature">
-                    <div class="feature__icon"><i class="fas fa-diagnoses"></i></div>
-                    <h3>تشخيص مدعوم بالذكاء الاصطناعي</h3>
-                    <p>تحليل دقيق للأعراض باستخدام قاعدة بيانات واسعة يتم تحديثها باستمرار.</p>
-                    <a class="link" href="diagnosis.html">انتقل لصفحة التشخيص <i class="fas fa-arrow-left"></i></a>
-                </article>
-                <article class="feature">
-                    <div class="feature__icon"><i class="fas fa-map-marked-alt"></i></div>
-                    <h3>تحديد أقرب المستشفيات</h3>
-                    <p>خريطة تفاعلية تعتمد على موقعك الجغرافي لعرض أهم المراكز والمستشفيات القريبة.</p>
-                    <a class="link" href="#mapSection">عرض الخريطة <i class="fas fa-arrow-left"></i></a>
-                </article>
-                <article class="feature">
-                    <div class="feature__icon"><i class="fas fa-comment-medical"></i></div>
-                    <h3>محادثة طبية فورية</h3>
-                    <p>تواصل مع مساعد طبي افتراضي للحصول على نصائح مبدئية حول حالتك.</p>
-                    <a class="link" href="chat.html">ابدأ المحادثة <i class="fas fa-arrow-left"></i></a>
-                </article>
-            </div>
-        </section>
-
-        <section class="section" aria-labelledby="vitals">
-            <div class="section__header">
-                <h2 id="vitals">مراقبة المؤشرات الحيوية</h2>
-                <p>اطّلع على قراءاتك العامة لمحاكاة حالتك الحالية.</p>
-            </div>
-            <div class="panel-grid">
-                <article class="panel panel--primary">
-                    <header class="panel__header">
-                        <h3><i class="fas fa-heartbeat"></i> لوحة المؤشرات</h3>
-                    </header>
-                    <div class="vitals-grid">
-                        <div class="vital-card">
-                            <span class="vital-card__icon"><i class="fas fa-tint"></i></span>
-                            <div>
-                                <h4>ضغط الدم</h4>
-                                <p id="bpValue">120/80</p>
-                                <span class="vital-chip" id="bpStatus">طبيعي</span>
-                            </div>
-                        </div>
-                        <div class="vital-card">
-                            <span class="vital-card__icon"><i class="fas fa-vial"></i></span>
-                            <div>
-                                <h4>سكر الدم</h4>
-                                <p id="glucoseValue">98 mg/dL</p>
-                                <span class="vital-chip" id="glucoseStatus">طبيعي</span>
-                            </div>
-                        </div>
-                        <div class="vital-card">
-                            <span class="vital-card__icon"><i class="fas fa-heart"></i></span>
-                            <div>
-                                <h4>نبض القلب</h4>
-                                <p id="pulseValue">72 bpm</p>
-                                <span class="vital-chip" id="pulseStatus">طبيعي</span>
-                            </div>
-                        </div>
-                    </div>
-                </article>
-            </div>
-        </section>
-
-        <section class="section" aria-labelledby="emergencyHeading">
-            <div class="section__header">
-                <h2 id="emergencyHeading"><i class="fas fa-exclamation-triangle"></i> رقم الطوارئ الموحد</h2>
-                <p>اتصل فوراً في الحالات الطارئة. هذا الرقم يعمل على مدار 24 ساعة.</p>
-            </div>
-            <div class="emergency-buttons-grid">
-                <a href="tel:123" class="emergency-btn emergency-btn--red">
-                    <span class="emergency-btn__icon"><i class="fas fa-ambulance"></i></span>
-                    <span class="emergency-btn__content">
-                        <strong>الطوارئ العامة</strong>
-                        <span class="emergency-btn__number">123</span>
-                        <small>رقم الطوارئ الموحد - إسعاف - مستشفيات</small>
-                    </span>
-                </a>
-            </div>
-        </section>
-
-        <section id="mapSection" class="section" aria-labelledby="mapHeading">
-            <div class="section__header">
-                <h2 id="mapHeading"><i class="fas fa-map-marker-alt"></i> أقرب المستشفيات والمراكز الطبية</h2>
-                <p>نحدد موقعك بإذن منك ثم نعرض أفضل الخيارات القريبة مع أرقام الطوارئ.</p>
-            </div>
-            
-            <div class="map-layout">
-                <div class="map-container">
-                    <!-- خريطة Google المدمجة -->
-                    <div class="emergency-map-container">
-                        <h3><i class="fas fa-hospital"></i> خريطة المستشفيات</h3>
-                        <div class="map-iframe-wrapper">
-                            <iframe 
-                                src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d110502.603895292!2d31.340867074249026!3d30.059618470158!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1shospitals!5e0!3m2!1sen!2seg!4v1691234567890" 
-                                class="emergency-map-iframe"
-                                allowfullscreen="" 
-                                loading="lazy" 
-                                referrerpolicy="no-referrer-when-downgrade">
-                            </iframe>
-                        </div>
-                        <div class="map-note">
-                            خريطة توضح مواقع المستشفيات والمراكز الطبية في القاهرة
-                        </div>
-                    </div>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <span class="hero-badge"><i class="fas fa-bolt"></i> منصة صحة رقمية متكاملة</span>
+                <h1 class="hero-title">تشخيص ذكي للأعراض مع متابعة فورية لحالتك الصحية</h1>
+                <p class="hero-description">ابدأ رحلتك مع منصة تشخيص فوري للأعراض لتحصل على توصيات دقيقة، خريطة للمستشفيات القريبة، ومحادثة مع مساعد طبي ذكي.</p>
+                
+                <div class="hero-actions">
+                    <a href="diagnosis.html" class="btn btn-primary"><i class="fas fa-stethoscope"></i> ابدأ التشخيص الآن</a>
+                    <a href="chat.html" class="btn btn-outline"><i class="fas fa-robot"></i> تحدث مع المساعد الذكي</a>
                 </div>
                 
-                <aside class="emergency-sidebar">
-                    <div class="info-card">
-                        <h3><i class="fas fa-lightbulb"></i> معلومات مهمة</h3>
-                        <ul class="info-list">
-                            <li><i class="fas fa-check-circle"></i> الخريطة تعرض أقرب المستشفيات لموقعك الحالي</li>
-                            <li><i class="fas fa-map-pin"></i> يمكنك رؤية موقعك الحالي على الخريطة</li>
-                            <li><i class="fas fa-phone-alt"></i> احفظ رقم الطوارئ الموحد 123 للاستخدام السريع</li>
-                            <li><i class="fas fa-clock"></i> معظم المستشفيات تقدم خدمة الطوارئ 24 ساعة</li>
-                            <li><i class="fas fa-ambulance"></i> اتصل مباشرة برقم 123 في الحالات الطارئة</li>
-                        </ul>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <div class="stat-number">120K+</div>
+                        <div class="stat-label">جلسة تشخيص ناجحة</div>
                     </div>
-                </aside>
+                    <div class="stat">
+                        <div class="stat-number">95%</div>
+                        <div class="stat-label">رضا المستخدمين</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number">24/7</div>
+                        <div class="stat-label">دعم واستشارات</div>
+                    </div>
+                </div>
             </div>
-        </section>
-    </main>
+            
+            <div class="hero-visual">
+                <div class="hero-card">
+                    <i class="fas fa-brain hero-card-icon"></i>
+                    <h3 class="hero-card-title">تشخيص بالذكاء الاصطناعي</h3>
+                    <p class="hero-card-description">تحليل دقيق للأعراض باستخدام أحدث تقنيات الذكاء الاصطناعي</p>
+                    <a href="diagnosis.html" class="btn btn-primary">جربه الآن</a>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <footer class="site-footer">
-        <p>© 2025 تشخيص فوري للأعراض. جميع الحقوق محفوظة.</p>
+    <!-- Features Section -->
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">خدمات المنصة</h2>
+                <p class="section-description">مجموعة أدوات متكاملة لمتابعة صحتك من مكان واحد</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i class="fas fa-diagnoses feature-icon"></i>
+                    <h3 class="feature-title">تشخيص الأعراض</h3>
+                    <p class="feature-description">تحليل دقيق للأعراض باستخدام قاعدة بيانات واسعة يتم تحديثها باستمرار</p>
+                    <a href="diagnosis.html" class="feature-link">انتقل لصفحة التشخيص <i class="fas fa-arrow-left"></i></a>
+                </div>
+                
+                <div class="feature-card">
+                    <i class="fas fa-robot feature-icon"></i>
+                    <h3 class="feature-title">محادثة طبية فورية</h3>
+                    <p class="feature-description">تواصل مع مساعد طبي افتراضي للحصول على نصائح مبدئية حول حالتك</p>
+                    <a href="chat.html" class="feature-link">ابدأ المحادثة <i class="fas fa-arrow-left"></i></a>
+                </div>
+                
+                <div class="feature-card">
+                    <i class="fas fa-map-marked-alt feature-icon"></i>
+                    <h3 class="feature-title">تحديد أقرب المستشفيات</h3>
+                    <p class="feature-description">خريطة تفاعلية تعتمد على موقعك الجغرافي لعرض أهم المراكز والمستشفيات القريبة</p>
+                    <a href="hospitals.html" class="feature-link">عرض الخريطة <i class="fas fa-arrow-left"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="section" style="background: #f8f9fa;">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">خدمات إضافية</h2>
+                <p class="section-description">خدمات متكاملة لرعاية صحتك بشكل أفضل</p>
+            </div>
+            
+            <div class="services-grid">
+                <div class="service-card">
+                    <i class="fas fa-heartbeat service-icon"></i>
+                    <h3 class="service-title">مراقبة المؤشرات</h3>
+                    <p class="service-description">تتبع ومراقبة المؤشرات الحيوية الأساسية لحالتك الصحية</p>
+                </div>
+                
+                <div class="service-card">
+                    <i class="fas fa-calendar-check service-icon"></i>
+                    <h3 class="service-title">مواعيد الطبيب</h3>
+                    <p class="service-description">حجز مواعيد مع الأطباء المتخصصين بسهولة وسرعة</p>
+                </div>
+                
+                <div class="service-card">
+                    <i class="fas fa-pills service-icon"></i>
+                    <h3 class="service-title">إدارة الأدوية</h3>
+                    <p class="service-description">تنظيم وجدولة الأدوية والجرعات والمتابعة اليومية</p>
+                </div>
+                
+                <div class="service-card">
+                    <i class="fas fa-file-medical service-icon"></i>
+                    <h3 class="service-title">السجل الصحي</h3>
+                    <p class="service-description">تخزين وتنظيم السجلات والتقارير الطبية بشكل آمن</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Emergency Section -->
+    <section class="emergency-section">
+        <div class="container">
+            <h2 class="emergency-title">رقم الطوارئ الموحد</h2>
+            <p class="emergency-description">اتصل فوراً في الحالات الطارئة. هذا الرقم يعمل على مدار 24 ساعة.</p>
+            <span class="emergency-number">123</span>
+            <a href="tel:123" class="emergency-btn"><i class="fas fa-phone"></i> اتصل الآن</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h3>تشخيص فوري</h3>
+                    <p>منصة رقمية متكاملة لتشخيص الأعراض وتقديم الرعاية الصحية الذكية.</p>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>روابط سريعة</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">الرئيسية</a></li>
+                        <li><a href="diagnosis.html">التشخيص</a></li>
+                        <li><a href="chat.html">محادثة AI</a></li>
+                        <li><a href="hospitals.html">المستشفيات</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>خدماتنا</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">تشخيص الأعراض</a></li>
+                        <li><a href="#">المساعد الطبي</a></li>
+                        <li><a href="#">خريطة المستشفيات</a></li>
+                        <li><a href="#">مراقبة المؤشرات</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>اتصل بنا</h3>
+                    <ul class="footer-links">
+                        <li><a href="tel:123">الطوارئ: 123</a></li>
+                        <li><a href="mailto:info@idos.com">info@idos.com</a></li>
+                        <li><a href="#">الدعم الفني</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>© 2025 تشخيص فوري للأعراض. جميع الحقوق محفوظة.</p>
+            </div>
+        </div>
     </footer>
 
     <script>
-        // التحكم في إظهار وإخفاء قسم "عن التطبيق"
-        const aboutIcon = document.getElementById('aboutIcon');
-        const aboutSection = document.getElementById('about');
-        
-        aboutIcon.addEventListener('click', function() {
-            if (aboutSection.style.display === 'none') {
-                aboutSection.style.display = 'block';
-                // تمرير الصفحة إلى قسم "عن التطبيق"
-                aboutSection.scrollIntoView({ behavior: 'smooth' });
-            } else {
-                aboutSection.style.display = 'none';
-            }
-        });
-
-        // إخفاء الشاشة التمهيدية بعد تحميل الصفحة
-        window.addEventListener('load', function() {
-            setTimeout(function() {
-                document.body.classList.remove('loading');
-            }, 1500);
-        });
-
-        // التحكم في القائمة المتنقلة
-        const navToggle = document.querySelector('.nav-toggle');
-        const mobileMenu = document.getElementById('mobileMenu');
-        
-        navToggle.addEventListener('click', function() {
-            const expanded = this.getAttribute('aria-expanded') === 'true';
-            this.setAttribute('aria-expanded', !expanded);
-            mobileMenu.hidden = expanded;
+        // التحقق من حالة تسجيل الدخول
+        document.addEventListener('DOMContentLoaded', function() {
+            const userSession = localStorage.getItem('userSession') || sessionStorage.getItem('userSession');
             
-            // إضافة تأثير للزر عند النقر
-            if (!expanded) {
-                this.style.transform = 'rotate(90deg)';
-            } else {
-                this.style.transform = 'rotate(0)';
+            if (!userSession) {
+                // إذا لم يكن المستخدم مسجل الدخول، توجيه إلى صفحة تسجيل الدخول
+                window.location.href = 'login.html';
+                return;
             }
-        });
-
-        // التحكم في الأقسام القابلة للطي
-        const accordionToggles = document.querySelectorAll('.accordion-toggle');
-        
-        accordionToggles.forEach(toggle => {
-            toggle.addEventListener('click', function() {
-                const expanded = this.getAttribute('aria-expanded') === 'true';
-                this.setAttribute('aria-expanded', !expanded);
+            
+            // تحديث معلومات المستخدم
+            try {
+                const userData = JSON.parse(userSession);
+                const userAvatar = document.querySelector('.user-avatar');
+                const userName = document.querySelector('.user-profile span');
                 
-                const panelId = this.getAttribute('aria-controls');
-                const panel = document.getElementById(panelId);
-                
-                if (expanded) {
-                    panel.hidden = true;
-                } else {
-                    panel.hidden = false;
+                if (userData.name && userAvatar) {
+                    userAvatar.textContent = userData.name.charAt(0);
                 }
-            });
-        });
-
-        // إضافة تأثيرات تفاعلية إضافية
-        const cards = document.querySelectorAll('.feature, .pulse-card, .vital-card');
-        
-        cards.forEach(card => {
-            card.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateY(-15px)';
+                if (userData.name && userName) {
+                    userName.textContent = userData.name;
+                }
+            } catch (e) {
+                console.log('خطأ في تحليل بيانات المستخدم');
+            }
+            
+            // إعداد زر تسجيل الخروج
+            const logoutBtn = document.createElement('a');
+            logoutBtn.href = 'login.html';
+            logoutBtn.className = 'nav-link';
+            logoutBtn.innerHTML = '<i class="fas fa-sign-out-alt"></i> تسجيل الخروج';
+            logoutBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('userSession');
+                sessionStorage.removeItem('userSession');
+                localStorage.removeItem('rememberMe');
+                window.location.href = 'login.html';
             });
             
-            card.addEventListener('mouseleave', function() {
-                this.style.transform = 'translateY(0)';
-            });
-        });
-
-        // تأثير التمرير للرأس
-        window.addEventListener('scroll', function() {
-            const header = document.querySelector('.site-header');
-            if (window.scrollY > 50) {
-                header.style.background = 'rgba(255, 255, 255, 0.98)';
-                header.style.boxShadow = 'var(--shadow-md)';
-                header.style.backdropFilter = 'blur(20px)';
-            } else {
-                header.style.background = 'rgba(255, 255, 255, 0.95)';
-                header.style.boxShadow = 'var(--shadow-sm)';
-                header.style.backdropFilter = 'blur(15px)';
-            }
+            document.querySelector('.nav-menu').appendChild(logoutBtn);
         });
 
         // تأثيرات إضافية للصفحة
@@ -1562,11 +854,24 @@
         }, observerOptions);
 
         // تطبيق تأثيرات الظهور على العناصر
-        document.querySelectorAll('.feature, .pulse-card, .vital-card, .section__header').forEach(el => {
+        document.querySelectorAll('.feature-card, .service-card, .section-header').forEach(el => {
             el.style.opacity = '0';
             el.style.transform = 'translateY(30px)';
             el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
             observer.observe(el);
+        });
+
+        // تأثير التمرير للرأس
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('.header');
+            if (window.scrollY > 50) {
+                header.style.background = 'rgba(255, 255, 255, 0.98)';
+                header.style.boxShadow = 'var(--shadow)';
+                header.style.backdropFilter = 'blur(10px)';
+            } else {
+                header.style.background = 'white';
+                header.style.boxShadow = 'var(--shadow-sm)';
+            }
         });
     </script>
 </body>

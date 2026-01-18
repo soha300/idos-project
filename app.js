@@ -450,6 +450,9 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
         
+        // تحديث القائمة الجانبية للموبايل
+        updateMobileSidebarUser();
+        
         // إعادة تطبيق تأثيرات الحركة بعد تحديث الـ UI
         setTimeout(applyButtonAnimations, 100);
     };
@@ -569,11 +572,385 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
+    // إنشاء القائمة الجانبية للداشبورد
+    const createDashboardSidebar = () => {
+        // التحقق مما إذا كانت القائمة موجودة بالفعل
+        if (document.getElementById('dashboardSidebar')) return;
+        
+        const sidebar = document.createElement('div');
+        sidebar.id = 'dashboardSidebar';
+        sidebar.className = 'dashboard-sidebar';
+        sidebar.innerHTML = `
+            <div class="dashboard-sidebar__overlay" id="dashboardSidebarOverlay"></div>
+            <div class="dashboard-sidebar__content">
+                <div class="dashboard-sidebar__header">
+                    <div class="dashboard-sidebar__logo">
+                        <i class="fas fa-stethoscope"></i>
+                        <span>IDOS</span>
+                    </div>
+                    <button class="dashboard-sidebar__close" id="dashboardSidebarClose">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <nav class="dashboard-sidebar__nav">
+                    <a href="index.html" class="dashboard-sidebar__link">
+                        <i class="fas fa-home"></i>
+                        <span>الرئيسية</span>
+                    </a>
+                    <a href="diagnosis.html" class="dashboard-sidebar__link">
+                        <i class="fas fa-diagnoses"></i>
+                        <span>التشخيص</span>
+                    </a>
+                    <a href="chat.html" class="dashboard-sidebar__link">
+                        <i class="fas fa-comments"></i>
+                        <span>محادثة</span>
+                    </a>
+                    <a href="hospitals.html" class="dashboard-sidebar__link">
+                        <i class="fas fa-hospital"></i>
+                        <span>المستشفيات</span>
+                    </a>
+                    <a href="settings.html" class="dashboard-sidebar__link">
+                        <i class="fas fa-cog"></i>
+                        <span>الإعدادات</span>
+                    </a>
+                    <div class="dashboard-sidebar__user" id="dashboardSidebarUser">
+                        <!-- سيتم ملؤه ديناميكياً -->
+                    </div>
+                </nav>
+            </div>
+        `;
+        
+        document.body.appendChild(sidebar);
+        
+        // إضافة الأنماط
+        addDashboardSidebarStyles();
+        
+        // إضافة مستمعي الأحداث
+        setupDashboardSidebarEvents();
+    };
+    
+    // إضافة أنماط القائمة الجانبية
+    const addDashboardSidebarStyles = () => {
+        const style = document.createElement('style');
+        style.textContent = `
+            /* أنماط القائمة الجانبية للداشبورد */
+            .dashboard-sidebar {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 85%;
+                max-width: 320px;
+                height: 100%;
+                background: white;
+                z-index: 10000;
+                transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                box-shadow: -5px 0 25px rgba(0, 0, 0, 0.15);
+                display: flex;
+                flex-direction: column;
+            }
+            
+            .dashboard-sidebar.active {
+                right: 0;
+            }
+            
+            .dashboard-sidebar__overlay {
+                position: fixed;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 9999;
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+            }
+            
+            .dashboard-sidebar__overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+            
+            .dashboard-sidebar__content {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                overflow-y: auto;
+            }
+            
+            .dashboard-sidebar__header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 1.5rem 1rem;
+                background: var(--gradient-primary);
+                color: white;
+            }
+            
+            .dashboard-sidebar__logo {
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                font-weight: 700;
+                font-size: 1.2rem;
+            }
+            
+            .dashboard-sidebar__close {
+                background: none;
+                border: none;
+                color: white;
+                font-size: 1.5rem;
+                cursor: pointer;
+                padding: 0.5rem;
+                border-radius: 50%;
+                transition: background 0.3s;
+            }
+            
+            .dashboard-sidebar__close:hover {
+                background: rgba(255, 255, 255, 0.2);
+            }
+            
+            .dashboard-sidebar__nav {
+                flex: 1;
+                padding: 1rem 0;
+            }
+            
+            .dashboard-sidebar__link {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                padding: 1rem 1.5rem;
+                text-decoration: none;
+                color: var(--dark);
+                transition: all 0.3s;
+                border-right: 3px solid transparent;
+            }
+            
+            .dashboard-sidebar__link:hover,
+            .dashboard-sidebar__link.active {
+                background: rgba(46, 134, 171, 0.1);
+                color: var(--primary);
+                border-right-color: var(--primary);
+            }
+            
+            .dashboard-sidebar__link i {
+                width: 20px;
+                text-align: center;
+            }
+            
+            .dashboard-sidebar__user {
+                padding: 1.5rem;
+                border-top: 1px solid #eee;
+                margin-top: auto;
+            }
+            
+            .dashboard-sidebar__user-info {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                margin-bottom: 1rem;
+            }
+            
+            .dashboard-sidebar__user-avatar {
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                background: var(--gradient-primary);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-weight: 700;
+                font-size: 1.2rem;
+            }
+            
+            .dashboard-sidebar__user-details {
+                flex: 1;
+            }
+            
+            .dashboard-sidebar__user-name {
+                font-weight: 700;
+                margin-bottom: 0.25rem;
+            }
+            
+            .dashboard-sidebar__user-email {
+                font-size: 0.85rem;
+                color: var(--gray);
+            }
+            
+            .dashboard-sidebar__actions {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .dashboard-sidebar__action-btn {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+                padding: 0.75rem 1rem;
+                background: none;
+                border: 1px solid #eee;
+                border-radius: var(--radius);
+                cursor: pointer;
+                transition: all 0.3s;
+                font-family: inherit;
+                font-size: 0.9rem;
+                color: var(--dark);
+            }
+            
+            .dashboard-sidebar__action-btn:hover {
+                background: rgba(46, 134, 171, 0.1);
+                border-color: var(--primary);
+                color: var(--primary);
+            }
+            
+            .dashboard-sidebar__action-btn.logout {
+                color: var(--accent);
+                border-color: rgba(247, 108, 108, 0.3);
+            }
+            
+            .dashboard-sidebar__action-btn.logout:hover {
+                background: rgba(247, 108, 108, 0.1);
+            }
+            
+            /* تحسينات للشاشات الصغيرة */
+            @media (max-width: 480px) {
+                .dashboard-sidebar {
+                    width: 90%;
+                }
+            }
+            
+            @media (min-width: 769px) {
+                .dashboard-sidebar,
+                .dashboard-sidebar__overlay {
+                    display: none !important;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    };
+    
+    // إعداد أحداث القائمة الجانبية
+    const setupDashboardSidebarEvents = () => {
+        const sidebar = document.getElementById('dashboardSidebar');
+        const overlay = document.getElementById('dashboardSidebarOverlay');
+        const closeBtn = document.getElementById('dashboardSidebarClose');
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        
+        // فتح القائمة
+        if (mobileMenuBtn) {
+            mobileMenuBtn.addEventListener('click', openDashboardSidebar);
+        }
+        
+        // إغلاق القائمة
+        if (closeBtn) {
+            closeBtn.addEventListener('click', closeDashboardSidebar);
+        }
+        
+        if (overlay) {
+            overlay.addEventListener('click', closeDashboardSidebar);
+        }
+        
+        // إغلاق القائمة عند النقر على رابط
+        document.querySelectorAll('.dashboard-sidebar__link').forEach(link => {
+            link.addEventListener('click', closeDashboardSidebar);
+        });
+        
+        // تحديث معلومات المستخدم في القائمة
+        updateDashboardSidebarUser();
+    };
+    
+    // فتح القائمة الجانبية
+    const openDashboardSidebar = () => {
+        const sidebar = document.getElementById('dashboardSidebar');
+        const overlay = document.getElementById('dashboardSidebarOverlay');
+        
+        if (sidebar && overlay) {
+            sidebar.classList.add('active');
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+    };
+    
+    // إغلاق القائمة الجانبية
+    const closeDashboardSidebar = () => {
+        const sidebar = document.getElementById('dashboardSidebar');
+        const overlay = document.getElementById('dashboardSidebarOverlay');
+        
+        if (sidebar && overlay) {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+    };
+    
+    // تحديث معلومات المستخدم في القائمة الجانبية
+    const updateDashboardSidebarUser = () => {
+        const userSection = document.getElementById('dashboardSidebarUser');
+        if (!userSection) return;
+        
+        const userSession = localStorage.getItem('userSession') || sessionStorage.getItem('userSession');
+        
+        if (userSession) {
+            try {
+                const userData = JSON.parse(userSession);
+                userSection.innerHTML = `
+                    <div class="dashboard-sidebar__user-info">
+                        <div class="dashboard-sidebar__user-avatar">${userData.name ? userData.name.charAt(0) : 'م'}</div>
+                        <div class="dashboard-sidebar__user-details">
+                            <div class="dashboard-sidebar__user-name">${userData.name || 'مستخدم'}</div>
+                            <div class="dashboard-sidebar__user-email">${userData.email || ''}</div>
+                        </div>
+                    </div>
+                    <div class="dashboard-sidebar__actions">
+                        <button class="dashboard-sidebar__action-btn" onclick="window.location.href='settings.html'">
+                            <i class="fas fa-user-cog"></i>
+                            <span>إعدادات الحساب</span>
+                        </button>
+                        <button class="dashboard-sidebar__action-btn logout" id="dashboardSidebarLogout">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>تسجيل الخروج</span>
+                        </button>
+                    </div>
+                `;
+                
+                // إضافة حدث تسجيل الخروج
+                document.getElementById('dashboardSidebarLogout')?.addEventListener('click', () => {
+                    localStorage.removeItem('userSession');
+                    sessionStorage.removeItem('userSession');
+                    window.location.reload();
+                });
+                
+            } catch (e) {
+                console.error('خطأ في تحليل بيانات المستخدم:', e);
+                userSection.innerHTML = `
+                    <div class="dashboard-sidebar__actions">
+                        <button class="dashboard-sidebar__action-btn" onclick="window.location.href='login.html'">
+                            <i class="fas fa-sign-in-alt"></i>
+                            <span>تسجيل الدخول</span>
+                        </button>
+                    </div>
+                `;
+            }
+        } else {
+            userSection.innerHTML = `
+                <div class="dashboard-sidebar__actions">
+                    <button class="dashboard-sidebar__action-btn" onclick="window.location.href='login.html'">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span>تسجيل الدخول</span>
+                    </button>
+                </div>
+            `;
+        }
+    };
+
     // تهيئة الصفحة
     addButtonStyles(); // إضافة الأنماط أولاً
     checkExistingSession();
     addInputEffects();
     applyButtonAnimations(); // تطبيق الحركات على الأزرار
+    createDashboardSidebar(); // إنشاء القائمة الجانبية للداشبورد
 
     // إضافة تأثير النقر على أزرار الطوارئ
     document.querySelectorAll('.emergency-btn').forEach(btn => {
@@ -593,7 +970,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-// Google Maps callback (نفس الكود السابق)
+// Google Maps callback
 let map;
 let userMarker;
 let infoWindow;

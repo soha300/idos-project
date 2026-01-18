@@ -3,21 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تسجيل الدخول | IDOS</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>تسجيل الدخول | تشخيص فوري</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #2563eb;
-            --primary-dark: #1d4ed8;
-            --secondary: #10b981;
-            --accent: #8b5cf6;
-            --light: #f8fafc;
-            --dark: #1e293b;
-            --gray: #64748b;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --error: #ef4444;
+            --primary: #8B5FBF;
+            --primary-dark: #6A4A8F;
+            --primary-light: #A67FDB;
+            --secondary: #D8BFD8;
+            --accent: #F76C6C;
+            --success: #57CC99;
+            --warning: #FFD166;
+            --light: #F8F9FA;
+            --dark: #212529;
+            --gray: #6C757D;
+            --gradient-primary: linear-gradient(135deg, #8B5FBF 0%, #6A4A8F 100%);
+            --gradient-secondary: linear-gradient(135deg, #D8BFD8 0%, #9370DB 100%);
+            --gradient-accent: linear-gradient(135deg, #F76C6C 0%, #E63946 100%);
+            --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.05);
+            --shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 15px 35px rgba(0, 0, 0, 0.15);
+            --radius: 12px;
+            --radius-lg: 16px;
         }
 
         * {
@@ -26,349 +34,213 @@
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: 'Cairo', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: #f8fafc;
+            overflow-x: hidden;
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            box-shadow: var(--shadow-sm);
+            padding: 1rem 0;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            padding: 20px;
-            line-height: 1.6;
-            position: relative;
-            overflow-x: hidden;
         }
 
-        /* IDOS المتحركة في الخلفية */
-        .idos-background {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: 0;
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
         }
 
-        .idos-floating {
-            position: absolute;
-            font-size: 8rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            opacity: 0.3;
-            animation: floatBackground 20s ease-in-out infinite;
-        }
-
-        .idos-floating:nth-child(1) {
-            top: 10%;
-            left: 5%;
-            animation-delay: 0s;
-        }
-
-        .idos-floating:nth-child(2) {
-            top: 60%;
-            right: 10%;
-            animation-delay: 5s;
-        }
-
-        .idos-floating:nth-child(3) {
-            bottom: 20%;
-            left: 15%;
-            animation-delay: 10s;
-        }
-
-        @keyframes floatBackground {
-            0%, 100% {
-                transform: translateY(0px) rotate(0deg);
-                opacity: 0.2;
-            }
-            25% {
-                transform: translateY(-20px) rotate(5deg);
-                opacity: 0.3;
-            }
-            50% {
-                transform: translateY(10px) rotate(-5deg);
-                opacity: 0.25;
-            }
-            75% {
-                transform: translateY(-15px) rotate(3deg);
-                opacity: 0.3;
-            }
-        }
-
-        /* أيقونة تسجيل الدخول الصغيرة */
-        .login-icon {
-            position: fixed;
-            top: 20px;
-            left: 20px;
+        .logo-icon {
             font-size: 2rem;
-            color: white;
-            cursor: pointer;
-            z-index: 1000;
-            transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.2);
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
+            color: var(--primary);
+            margin-left: 0.5rem;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--dark);
+            font-weight: 600;
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary);
+        }
+
+        /* Login Section */
+        .login-section {
+            flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            backdrop-filter: blur(10px);
-            animation: pulse 2s infinite;
-        }
-
-        .login-icon:hover {
-            transform: scale(1.1);
-            background: rgba(255, 255, 255, 0.3);
-            animation: none;
-        }
-
-        /* IDOS المتحركة فوق الصفحة */
-        .idos-header {
-            position: absolute;
-            top: 20px;
-            width: 100%;
-            text-align: center;
-            z-index: 10;
-        }
-
-        .idos-animated {
-            font-size: 4rem;
-            font-weight: 900;
-            background: linear-gradient(135deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57, #ff9ff3);
-            background-size: 400% 400%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: gradientShift 6s ease infinite, floatHeader 3s ease-in-out infinite;
-            text-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
-            position: relative;
-            display: inline-block;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        @keyframes floatHeader {
-            0%, 100% { transform: translateY(0px) scale(1); }
-            50% { transform: translateY(-10px) scale(1.05); }
-        }
-
-        .idos-animated:hover {
-            animation: gradientShift 3s ease infinite, floatHeader 1.5s ease-in-out infinite, pulseHover 0.5s ease;
-        }
-
-        @keyframes pulseHover {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
-        .idos-animated::before {
-            content: '';
-            position: absolute;
-            top: -10px;
-            left: -10px;
-            right: -10px;
-            bottom: -10px;
-            background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
-            border-radius: 20px;
-            z-index: -1;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .idos-animated:hover::before {
-            opacity: 1;
-        }
-
-        /* حاوية تسجيل الدخول */
-        .login-container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
-            padding: 50px 40px;
-            width: 100%;
-            max-width: 450px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 3rem 1.5rem;
+            background: var(--gradient-primary);
             position: relative;
             overflow: hidden;
-            animation: slideIn 0.8s ease-out;
-            margin-top: 100px;
-            z-index: 5;
         }
 
-        .login-container::before {
+        .login-section::before {
             content: '';
             position: absolute;
             top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
-            transform: rotate(45deg);
-            animation: shimmer 8s infinite linear;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
         }
 
-        @keyframes shimmer {
-            0% { transform: rotate(45deg) translateX(-100%); }
-            100% { transform: rotate(45deg) translateX(100%); }
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateX(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
-
-        /* رأس تسجيل الدخول */
-        .login-header {
-            text-align: center;
-            margin-bottom: 40px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .welcome-section h2 {
-            color: var(--dark);
-            font-size: 1.8rem;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-
-        .welcome-section p {
-            color: var(--gray);
-            margin: 0;
-            font-size: 1rem;
-        }
-
-        /* نماذج الإدخال */
-        .form-group {
-            margin-bottom: 25px;
-            position: relative;
-            z-index: 2;
-            animation: fadeIn 0.8s ease-out 0.2s both;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            color: var(--dark);
-            font-weight: 600;
-            font-size: 0.95rem;
-        }
-
-        .input-with-icon {
-            position: relative;
-        }
-
-        .input-icon {
+        .login-section::after {
+            content: '';
             position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
+            bottom: -30%;
+            left: -10%;
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .login-container {
+            max-width: 450px;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+        }
+
+        .login-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 3rem;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+        }
+
+        .login-header {
+            margin-bottom: 2.5rem;
+        }
+
+        .login-icon {
+            font-size: 3.5rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .login-title {
+            font-size: 2rem;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+            font-weight: 800;
+        }
+
+        .login-subtitle {
             color: var(--gray);
             font-size: 1.1rem;
         }
 
+        .form-group {
+            margin-bottom: 1.5rem;
+            text-align: right;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .input-group {
+            position: relative;
+        }
+
         .form-input {
             width: 100%;
-            padding: 16px 50px 16px 20px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
+            padding: 1rem 3rem 1rem 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: var(--radius);
             font-size: 1rem;
-            transition: all 0.3s ease;
-            background: var(--light);
             font-family: 'Cairo', sans-serif;
-            color: var(--dark);
+            transition: all 0.3s;
         }
 
         .form-input:focus {
             outline: none;
             border-color: var(--primary);
-            background: white;
-            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
-            transform: translateY(-2px);
+            box-shadow: 0 0 0 3px rgba(139, 95, 191, 0.1);
         }
 
-        .input-hint {
-            display: block;
-            margin-top: 6px;
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
             color: var(--gray);
-            font-size: 0.8rem;
         }
 
-        /* خيارات النموذج */
         .form-options {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
-            position: relative;
-            z-index: 2;
-            animation: fadeIn 0.8s ease-out 0.4s both;
+            margin-bottom: 2rem;
         }
 
         .checkbox-container {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 0.5rem;
             cursor: pointer;
-            color: var(--dark);
-            font-weight: 500;
-            font-size: 0.9rem;
+        }
+
+        .checkbox-container input {
+            display: none;
         }
 
         .custom-checkbox {
-            width: 18px;
-            height: 18px;
-            border: 2px solid #cbd5e0;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #e9ecef;
             border-radius: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
         }
 
         .custom-checkbox.checked {
@@ -387,8 +259,7 @@
             color: var(--primary);
             text-decoration: none;
             font-weight: 600;
-            font-size: 0.85rem;
-            transition: all 0.3s ease;
+            transition: color 0.3s;
         }
 
         .forgot-link:hover {
@@ -396,60 +267,62 @@
             text-decoration: underline;
         }
 
-        /* أزرار */
         .btn {
-            padding: 16px;
-            border: none;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 2rem;
+            border-radius: var(--radius);
+            font-weight: 700;
+            text-decoration: none;
             transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 1rem;
+            gap: 0.7rem;
             width: 100%;
-            font-family: 'Cairo', sans-serif;
-            position: relative;
-            z-index: 2;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--accent));
+            background: var(--gradient-primary);
             color: white;
-            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
-            animation: fadeIn 0.8s ease-out 0.6s both;
+            box-shadow: var(--shadow);
         }
 
         .btn-primary:hover {
             transform: translateY(-3px);
-            box-shadow: 0 12px 30px rgba(37, 99, 235, 0.4);
+            box-shadow: var(--shadow-lg);
         }
 
-        .btn-primary:active {
-            transform: translateY(-1px);
+        .btn-google {
+            background: white;
+            color: var(--dark);
+            border: 2px solid #e9ecef;
+            margin-top: 1rem;
         }
 
-        /* تذييل النموذج */
-        .form-footer {
-            text-align: center;
-            margin-top: 30px;
-            padding-top: 25px;
-            border-top: 1px solid rgba(226, 232, 240, 0.8);
-            position: relative;
-            z-index: 2;
-            animation: fadeIn 0.8s ease-out 0.8s both;
+        .btn-google:hover {
+            background: #f8f9fa;
+            transform: translateY(-3px);
         }
 
-        .form-footer p {
+        .login-footer {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .login-footer p {
             color: var(--gray);
-            margin: 0;
-            font-size: 0.9rem;
         }
 
         .register-link {
             color: var(--primary);
             text-decoration: none;
             font-weight: 700;
-            margin-right: 5px;
-            transition: all 0.3s ease;
+            margin-right: 0.5rem;
+            transition: color 0.3s;
         }
 
         .register-link:hover {
@@ -457,309 +330,407 @@
             text-decoration: underline;
         }
 
-        /* الرسائل */
-        .message {
-            display: none;
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            animation: slideIn 0.3s ease;
-            position: relative;
-            z-index: 2;
+        .demo-accounts {
+            background: rgba(139, 95, 191, 0.1);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            margin-top: 2rem;
+            text-align: right;
         }
 
-        .message--success {
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            color: var(--success);
-        }
-
-        .message--error {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-            color: var(--error);
-        }
-
-        .message-content {
+        .demo-title {
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--primary-dark);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 0.5rem;
         }
 
-        .loading-spinner {
-            display: inline-block;
-            width: 18px;
-            height: 18px;
-            border: 2px solid #ffffff;
-            border-radius: 50%;
-            border-top-color: transparent;
-            animation: spin 1s ease-in-out infinite;
-            margin-left: 8px;
+        .demo-account {
+            background: white;
+            border-radius: var(--radius);
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-left: 4px solid var(--primary);
+            cursor: pointer;
+            transition: all 0.3s;
         }
 
-        /* تأثيرات للهواتف */
+        .demo-account:hover {
+            transform: translateX(-5px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .demo-account:last-child {
+            margin-bottom: 0;
+        }
+
+        .demo-email {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .demo-password {
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--dark);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+
+        .footer p {
+            margin: 0;
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
-            .idos-animated {
-                font-size: 3rem;
+            .nav-menu {
+                display: none;
             }
             
-            .login-container {
-                margin-top: 80px;
-                padding: 40px 25px;
+            .login-card {
+                padding: 2rem;
             }
             
-            .idos-floating {
-                font-size: 5rem;
+            .login-title {
+                font-size: 1.7rem;
             }
         }
 
-        @media (max-width: 480px) {
-            .idos-animated {
-                font-size: 2.5rem;
-            margin-top: 10px;
-            animation: gradientShift 6s ease infinite, floatHeader 3s ease-in-out infinite;
-            transform: scale(0.9);
-            transform-origin: center;
-            display: block;
-                width: 100%;
-                text-align: center;
+        @media (max-width: 576px) {
+            .login-section {
+                padding: 2rem 1rem;
             }
             
-            .login-container {
-                margin-top: 70px;
-                padding: 30px 20px;
+            .login-card {
+                padding: 1.5rem;
             }
             
             .form-options {
                 flex-direction: column;
-                gap: 15px;
+                gap: 1rem;
                 align-items: flex-start;
             }
             
-            .login-icon {
-                top: 15px;
-                left: 15px;
-                width: 45px;
-                height: 45px;
-                font-size: 1.5rem;
+            .demo-accounts {
+                padding: 1rem;
             }
-            
-            .idos-floating {
-                font-size: 4rem;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
             }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-card {
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .form-group {
+            animation: fadeIn 0.6s ease-out 0.2s both;
+        }
+
+        .form-options {
+            animation: fadeIn 0.6s ease-out 0.4s both;
+        }
+
+        .btn-primary {
+            animation: fadeIn 0.6s ease-out 0.6s both;
+        }
+
+        .login-footer {
+            animation: fadeIn 0.6s ease-out 0.8s both;
         }
     </style>
 </head>
 <body>
-    <!-- IDOS المتحركة في الخلفية -->
-    <div class="idos-background">
-        <div class="idos-floating">IDOS</div>
-        <div class="idos-floating">IDOS</div>
-        <div class="idos-floating">IDOS</div>
-    </div>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-stethoscope logo-icon"></i>
+                <span class="logo-text">تشخيص فوري</span>
+            </a>
+            
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> الرئيسية</a></li>
+                    <li><a href="diagnosis.html" class="nav-link"><i class="fas fa-diagnoses"></i> التشخيص</a></li>
+                    <li><a href="chat.html" class="nav-link"><i class="fas fa-robot"></i> محادثة AI</a></li>
+                    <li><a href="register.html" class="nav-link"><i class="fas fa-user-plus"></i> إنشاء حساب</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
-    <!-- IDOS المتحركة فوق الصفحة -->
-    <div class="idos-header">
-        <div class="idos-animated" id="animatedIdos">IDOS</div>
-    </div>
+    <!-- Login Section -->
+    <section class="login-section">
+        <div class="login-container">
+            <div class="login-card">
+                <div class="login-header">
+                    <i class="fas fa-user-circle login-icon"></i>
+                    <h1 class="login-title">مرحباً بعودتك</h1>
+                    <p class="login-subtitle">سجل الدخول للوصول إلى حسابك</p>
+                </div>
 
-    <!-- أيقونة تسجيل الدخول الصغيرة -->
-    <div class="login-icon" id="loginIcon">
-        <i class="fas fa-user-circle"></i>
-    </div>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="email" class="form-label">البريد الإلكتروني</label>
+                        <div class="input-group">
+                            <input type="email" id="email" class="form-input" placeholder="example@email.com" required>
+                            <i class="fas fa-envelope input-icon"></i>
+                        </div>
+                    </div>
 
-    <!-- صفحة تسجيل الدخول -->
-    <div id="loginPage" class="login-container">
-        <div class="login-header">
-            <div class="welcome-section">
-                <h2>مرحباً بك في نظام التشخيص الذكي</h2>
-                <p>سجل الدخول للوصول إلى نظام التشخيص المتقدم</p>
+                    <div class="form-group">
+                        <label for="password" class="form-label">كلمة المرور</label>
+                        <div class="input-group">
+                            <input type="password" id="password" class="form-input" placeholder="أدخل كلمة المرور" required>
+                            <i class="fas fa-lock input-icon"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-options">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="rememberMe">
+                            <span class="custom-checkbox"></span>
+                            <span>تذكرني</span>
+                        </label>
+                        <a href="#forgot-password" class="forgot-link">نسيت كلمة المرور؟</a>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-sign-in-alt"></i>
+                        تسجيل الدخول
+                    </button>
+
+                    <button type="button" class="btn btn-google">
+                        <i class="fab fa-google"></i>
+                        تسجيل الدخول بحساب Google
+                    </button>
+                </form>
+
+                <div class="login-footer">
+                    <p>ليس لديك حساب؟ <a href="register.html" class="register-link">إنشاء حساب جديد</a></p>
+                </div>
+
+                <div class="demo-accounts">
+                    <h3 class="demo-title"><i class="fas fa-info-circle"></i> حسابات تجريبية</h3>
+                    <div class="demo-account" onclick="fillDemoAccount('user@example.com', '123456')">
+                        <div class="demo-email">user@example.com</div>
+                        <div class="demo-password">كلمة المرور: 123456</div>
+                    </div>
+                    <div class="demo-account" onclick="fillDemoAccount('doctor@clinic.com', 'doctor123')">
+                        <div class="demo-email">doctor@clinic.com</div>
+                        <div class="demo-password">كلمة المرور: doctor123</div>
+                    </div>
+                </div>
             </div>
         </div>
+    </section>
 
-        <form id="loginForm" class="login-form">
-            <div class="form-group">
-                <label class="form-label">البريد الإلكتروني</label>
-                <div class="input-with-icon">
-                    <i class="fas fa-envelope input-icon"></i>
-                    <input type="email" id="email" class="form-input" placeholder="example@email.com" required>
-                </div>
-                <small class="input-hint">أدخل بريدك الإلكتروني المسجل</small>
-            </div>
-            
-            <div class="form-group">
-                <label class="form-label">كلمة المرور</label>
-                <div class="input-with-icon">
-                    <i class="fas fa-lock input-icon"></i>
-                    <input type="password" id="password" class="form-input" placeholder="أدخل كلمة المرور" required>
-                </div>
-                <small class="input-hint">كلمة المرور يجب أن تكون 6 أحرف على الأقل</small>
-            </div>
-            
-            <div class="form-options">
-                <label class="checkbox-container">
-                    <span class="custom-checkbox" id="rememberCheckbox"></span>
-                    <span>تذكرني</span>
-                </label>
-                <a href="#forgot-password" class="forgot-link">نسيت كلمة المرور؟</a>
-            </div>
-            
-            <div class="form-actions">
-                <button class="btn btn-primary" type="submit">
-                    <span id="btnText">تسجيل الدخول</span>
-                </button>
-            </div>
-            
-            <div class="form-footer">
-                <p>ليس لديك حساب؟ <a href="#register" class="register-link">إنشاء حساب جديد</a></p>
-            </div>
-        </form>
-        
-        <div id="loginMessage" class="message" aria-live="polite"></div>
-    </div>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>© 2025 تشخيص فوري للأعراض. جميع الحقوق محفوظة.</p>
+        </div>
+    </footer>
 
     <script>
-        // التحقق من حالة تسجيل الدخول عند تحميل الصفحة
+        // التحقق من حالة تسجيل الدخول
         document.addEventListener('DOMContentLoaded', function() {
-            const userSession = localStorage.getItem('userSession') || sessionStorage.getItem('userSession');
-            const loginPage = document.getElementById('loginPage');
-            const loginIcon = document.getElementById('loginIcon');
-            const animatedIdos = document.getElementById('animatedIdos');
-            
-            if (userSession) {
-                // إذا كان المستخدم مسجل الدخول، توجيه إلى الصفحة الرئيسية
+            // إذا كان المستخدم مسجل الدخول بالفعل، نوجهه للصفحة الرئيسية
+            if (localStorage.getItem('userSession') || sessionStorage.getItem('userSession')) {
                 window.location.href = 'index.html';
                 return;
             }
-            
-            // إعداد نموذج تسجيل الدخول
-            setupLoginForm();
-            
-            // إعداد أيقونة تسجيل الدخول
-            loginIcon.addEventListener('click', function() {
-                loginPage.style.display = loginPage.style.display === 'none' ? 'block' : 'none';
-            });
 
-            // تأثيرات إضافية لـ IDOS المتحركة
-            if (animatedIdos) {
-                // تأثير النقر
-                animatedIdos.addEventListener('click', function() {
-                    this.style.animation = 'gradientShift 1s ease infinite, floatHeader 0.5s ease-in-out infinite, pulseHover 0.3s ease';
-                    setTimeout(() => {
-                        this.style.animation = 'gradientShift 6s ease infinite, floatHeader 3s ease-in-out infinite';
-                    }, 1000);
-                });
-
-                // تأثير عند التمرير
-                window.addEventListener('scroll', function() {
-                    const scrolled = window.pageYOffset;
-                    const rate = scrolled * -0.3;
-                    animatedIdos.style.transform = `translateY(${rate}px) scale(${1 - scrolled * 0.001})`;
-                });
-            }
-        });
-
-        function setupLoginForm() {
-            const loginForm = document.getElementById("loginForm");
-            const loginMessage = document.getElementById("loginMessage");
-            const rememberCheckbox = document.getElementById("rememberCheckbox");
-            const btnText = document.getElementById("btnText");
+            const loginForm = document.getElementById('loginForm');
+            const rememberCheckbox = document.querySelector('.custom-checkbox');
+            const rememberMe = document.getElementById('rememberMe');
 
             // إعداد checkbox مخصص
             rememberCheckbox.addEventListener('click', function() {
                 this.classList.toggle('checked');
+                rememberMe.checked = this.classList.contains('checked');
             });
 
+            // التحقق من صحة البريد الإلكتروني
             const validateEmail = (email) => {
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 return emailRegex.test(email);
             };
 
+            // التحقق من صحة كلمة المرور
             const validatePassword = (password) => {
                 return password.length >= 6;
             };
 
+            // عرض الرسائل
             const showMessage = (message, type = 'error') => {
-                loginMessage.innerHTML = '';
-                loginMessage.className = `message message--${type}`;
-                
-                const messageContent = document.createElement('div');
-                messageContent.className = 'message-content';
-                messageContent.innerHTML = `
-                    <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle'}"></i>
-                    <span>${message}</span>
-                `;
-                
-                loginMessage.appendChild(messageContent);
-                loginMessage.style.display = 'block';
+                // إزالة أي رسالة سابقة
+                const existingMessage = document.querySelector('.message');
+                if (existingMessage) {
+                    existingMessage.remove();
+                }
 
+                // إنشاء رسالة جديدة
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message message--${type}`;
+                messageDiv.style.cssText = `
+                    padding: 1rem;
+                    border-radius: var(--radius);
+                    margin-bottom: 1.5rem;
+                    background: ${type === 'success' ? 'rgba(87, 204, 153, 0.1)' : 'rgba(247, 108, 108, 0.1)'};
+                    border: 1px solid ${type === 'success' ? 'var(--success)' : 'var(--accent)'};
+                    color: ${type === 'success' ? 'var(--success)' : 'var(--accent)'};
+                    font-weight: 600;
+                    text-align: center;
+                `;
+                messageDiv.textContent = message;
+
+                // إدراج الرسالة قبل النموذج
+                loginForm.parentNode.insertBefore(messageDiv, loginForm);
+
+                // إزالة الرسالة بعد 5 ثواني
                 if (type === 'success') {
                     setTimeout(() => {
-                        loginMessage.style.display = 'none';
-                    }, 3000);
+                        messageDiv.remove();
+                    }, 5000);
                 }
             };
 
+            // عرض مؤشر التحميل
             const showLoading = (show = true) => {
                 const submitBtn = loginForm.querySelector('button[type="submit"]');
-                
+                if (!submitBtn) return;
+
                 if (show) {
-                    btnText.innerHTML = `
+                    submitBtn.innerHTML = `
                         <div class="loading-spinner"></div>
                         جاري تسجيل الدخول...
                     `;
                     submitBtn.disabled = true;
+                    
+                    // إضافة CSS للـ spinner
+                    if (!document.querySelector('#spinner-style')) {
+                        const style = document.createElement('style');
+                        style.id = 'spinner-style';
+                        style.textContent = `
+                            .loading-spinner {
+                                display: inline-block;
+                                width: 18px;
+                                height: 18px;
+                                border: 2px solid #ffffff;
+                                border-radius: 50%;
+                                border-top-color: transparent;
+                                animation: spin 1s ease-in-out infinite;
+                                margin-left: 8px;
+                            }
+                            @keyframes spin {
+                                to { transform: rotate(360deg); }
+                            }
+                        `;
+                        document.head.appendChild(style);
+                    }
                 } else {
-                    btnText.textContent = 'تسجيل الدخول';
+                    submitBtn.innerHTML = `
+                        <i class="fas fa-sign-in-alt"></i>
+                        تسجيل الدخول
+                    `;
                     submitBtn.disabled = false;
                 }
             };
 
-            const saveUserSession = (userData, rememberMe) => {
+            // حفظ بيانات الجلسة
+            const saveUserSession = (user, rememberMe) => {
                 const sessionData = {
-                    email: userData.email,
-                    name: userData.name || userData.email.split('@')[0],
+                    email: user.email,
+                    name: user.name,
                     loggedIn: true,
                     timestamp: new Date().toISOString()
                 };
                 
                 if (rememberMe) {
                     localStorage.setItem('userSession', JSON.stringify(sessionData));
+                    localStorage.setItem('rememberMe', 'true');
                 } else {
                     sessionStorage.setItem('userSession', JSON.stringify(sessionData));
+                    localStorage.removeItem('rememberMe');
                 }
             };
 
+            // قاعدة بيانات المستخدمين المحاكاة
+            const users = [
+                { 
+                    email: 'user@example.com', 
+                    password: '123456', 
+                    name: 'أحمد محمد'
+                },
+                { 
+                    email: 'doctor@clinic.com', 
+                    password: 'doctor123', 
+                    name: 'د. محمد علي'
+                }
+            ];
+
+            // السماح بالدخول بأي بريد إلكتروني وكلمة مرور (للتجربة)
+            const allowAnyLogin = (email, password) => {
+                // إذا كان البريد الإلكتروني يحتوي @ وكلمة المرور 6 أحرف على الأقل
+                if (email.includes('@') && password.length >= 6) {
+                    const user = {
+                        email: email,
+                        name: email.split('@')[0],
+                        loggedIn: true
+                    };
+                    
+                    const rememberMe = document.getElementById("rememberMe")?.checked;
+                    saveUserSession(user, rememberMe);
+                    return true;
+                }
+                return false;
+            };
+
+            // معالجة تسجيل الدخول
             const handleLogin = async (email, password, rememberMe) => {
                 showLoading(true);
 
                 try {
                     await new Promise(resolve => setTimeout(resolve, 1500));
                     
-                    if (validateEmail(email) && validatePassword(password)) {
-                        const userData = {
-                            email: email,
-                            name: email.split('@')[0]
-                        };
-                        
-                        saveUserSession(userData, rememberMe);
-                        
-                        // توجيه إلى الصفحة الرئيسية
-                        window.location.href = 'index.html';
-                        
-                    } else {
-                        showMessage('يرجى إدخال بريد إلكتروني صحيح وكلمة مرور 6 أحرف على الأقل');
-                        
-                        const emailInput = document.getElementById('email');
-                        const passwordInput = document.getElementById('password');
-                        
-                        emailInput.style.animation = 'shake 0.5s ease';
-                        passwordInput.style.animation = 'shake 0.5s ease';
-                        
+                    // المحاولة مع المستخدمين المسجلين أولاً
+                    const user = users.find(u => u.email === email && u.password === password);
+                    
+                    if (user) {
+                        saveUserSession(user, rememberMe);
+                        showMessage('تم تسجيل الدخول بنجاح! جاري التوجيه...', 'success');
                         setTimeout(() => {
-                            emailInput.style.animation = '';
-                            passwordInput.style.animation = '';
-                        }, 500);
+                            window.location.href = 'index.html';
+                        }, 2000);
+                    } 
+                    // إذا فشل، السماح بأي بيانات صالحة
+                    else if (allowAnyLogin(email, password)) {
+                        showMessage('تم تسجيل الدخول بنجاح! جاري التوجيه...', 'success');
+                        setTimeout(() => {
+                            window.location.href = 'index.html';
+                        }, 2000);
+                    }
+                    else {
+                        showMessage('يرجى إدخال بريد إلكتروني صحيح وكلمة مرور 6 أحرف على الأقل');
                     }
                     
                 } catch (error) {
@@ -769,13 +740,15 @@
                 }
             };
 
-            loginForm.addEventListener("submit", (event) => {
+            // معالجة نموذج تسجيل الدخول
+            loginForm.addEventListener('submit', (event) => {
                 event.preventDefault();
                 
-                const email = document.getElementById("email").value.trim();
-                const password = document.getElementById("password").value;
-                const rememberMe = rememberCheckbox.classList.contains('checked');
+                const email = document.getElementById('email').value.trim();
+                const password = document.getElementById('password').value;
+                const rememberMe = document.getElementById('rememberMe').checked;
 
+                // التحقق من صحة البيانات
                 if (!validateEmail(email)) {
                     showMessage('يرجى إدخال بريد إلكتروني صحيح');
                     document.getElementById('email').focus();
@@ -790,7 +763,35 @@
 
                 handleLogin(email, password, rememberMe);
             });
-        }
+
+            // تعبئة الحسابات التجريبية
+            window.fillDemoAccount = function(email, password) {
+                document.getElementById('email').value = email;
+                document.getElementById('password').value = password;
+                document.getElementById('rememberMe').checked = true;
+                document.querySelector('.custom-checkbox').classList.add('checked');
+                
+                // إضافة تأثير للعنصر الذي تم النقر عليه
+                const demoAccount = event.currentTarget;
+                demoAccount.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    demoAccount.style.transform = '';
+                }, 200);
+            };
+
+            // إضافة تأثيرات للحقول
+            const inputs = document.querySelectorAll('.form-input');
+            
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.style.transform = 'translateY(-2px)';
+                });
+                
+                input.addEventListener('blur', function() {
+                    this.parentElement.style.transform = 'translateY(0)';
+                });
+            });
+        });
     </script>
 </body>
 </html>

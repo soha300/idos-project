@@ -1,30 +1,28 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>محادثة AI | تشخيص فوري للأعراض</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المساعد الذكي | تشخيص فوري</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* أنماط CSS جديدة ومحسنة */
         :root {
-            --primary: #2563eb;
-            --primary-light: #3b82f6;
-            --primary-dark: #1d4ed8;
-            --secondary: #0f172a;
-            --accent: #8b5cf6;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --light: #f8fafc;
-            --gray: #64748b;
-            --gray-light: #e2e8f0;
-            --white: #ffffff;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --primary: #8B5FBF;
+            --primary-dark: #6A4A8C;
+            --primary-light: #A67FCF;
+            --secondary: #D4C1EC;
+            --accent: #F76C6C;
+            --success: #57CC99;
+            --warning: #FFD166;
+            --light: #F8F9FA;
+            --dark: #212529;
+            --gray: #6C757D;
+            --gradient-primary: linear-gradient(135deg, #8B5FBF 0%, #6A4A8C 100%);
+            --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.05);
+            --shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 15px 35px rgba(0, 0, 0, 0.15);
             --radius: 12px;
-            --radius-lg: 20px;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * {
@@ -35,182 +33,119 @@
 
         body {
             font-family: 'Cairo', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-color: #f8fafc;
             min-height: 100vh;
-            color: var(--secondary);
-            line-height: 1.6;
         }
 
-        /* Header جديد */
+        /* Header */
         .header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: var(--shadow);
+            background: white;
+            box-shadow: var(--shadow-sm);
             position: sticky;
             top: 0;
-            z-index: 1000;
+            z-index: 100;
+            padding: 1rem 0;
         }
 
-        .nav-container {
+        .header-container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 1rem 2rem;
+            padding: 0 1.5rem;
             display: flex;
-            align-items: center;
             justify-content: space-between;
+            align-items: center;
         }
 
         .logo {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            font-weight: 800;
-            font-size: 1.4rem;
-            color: var(--primary-dark);
             text-decoration: none;
         }
 
         .logo-icon {
             font-size: 2rem;
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: var(--primary);
+            margin-left: 0.5rem;
         }
 
-        .nav-links {
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .nav-menu {
             display: flex;
             list-style: none;
             gap: 2rem;
-            align-items: center;
         }
 
-        .nav-links a {
+        .nav-link {
             text-decoration: none;
-            color: var(--secondary);
+            color: var(--dark);
             font-weight: 600;
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: var(--primary);
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--light);
             padding: 0.5rem 1rem;
             border-radius: 50px;
-            transition: var(--transition);
-            position: relative;
+            cursor: pointer;
         }
 
-        .nav-links a:hover {
-            color: var(--primary);
-            background: rgba(37, 99, 235, 0.1);
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
         }
 
-        .nav-links a.active {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: var(--white);
-            box-shadow: var(--shadow);
-        }
-
-        .nav-toggle {
+        .mobile-menu-btn {
             display: none;
             background: none;
             border: none;
             font-size: 1.5rem;
+            color: var(--dark);
             cursor: pointer;
-            color: var(--primary);
         }
 
-        /* Hero Section جديدة */
-        .hero {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            border-radius: var(--radius-lg);
-            margin: 2rem auto;
-            max-width: 1200px;
-            padding: 4rem 3rem;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(45deg, rgba(255,255,255,0.1), transparent);
-            z-index: -1;
-        }
-
-        .hero-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, var(--accent), var(--primary));
-            color: white;
-            padding: 0.5rem 1.5rem;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 0.9rem;
-            margin-bottom: 1.5rem;
-            box-shadow: var(--shadow);
-        }
-
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            background: linear-gradient(135deg, var(--secondary), var(--primary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: 800;
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            color: var(--light);
-            max-width: 600px;
-            margin: 0 auto;
-            opacity: 0.9;
-        }
-
-        /* Chat Container جديد */
-        .chat-section {
-            max-width: 1200px;
-            margin: 0 auto 3rem;
-            padding: 0 2rem;
-        }
-
-        .section-header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        .section-header h2 {
-            font-size: 2.5rem;
-            color: var(--white);
-            margin-bottom: 1rem;
-            font-weight: 700;
-        }
-
-        .section-header p {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 1.1rem;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
+        /* Chat Container */
         .chat-container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-lg);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            overflow: hidden;
-            height: 600px;
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
             display: flex;
             flex-direction: column;
+            height: calc(100vh - 200px);
         }
 
         .chat-header {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            background: var(--gradient-primary);
             color: white;
-            padding: 1.5rem 2rem;
+            padding: 1.5rem;
+            border-radius: var(--radius) var(--radius) 0 0;
             display: flex;
             align-items: center;
             gap: 1rem;
@@ -219,76 +154,49 @@
         .chat-avatar {
             width: 50px;
             height: 50px;
-            background: rgba(255, 255, 255, 0.2);
             border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.5rem;
         }
 
-        .chat-header-info h3 {
-            margin: 0;
-            font-size: 1.3rem;
-        }
-
-        .chat-header-info p {
-            margin: 0;
-            opacity: 0.9;
-            font-size: 0.9rem;
+        .chat-info h2 {
+            margin-bottom: 0.25rem;
         }
 
         .chat-status {
-            margin-right: auto;
+            font-size: 0.9rem;
+            opacity: 0.8;
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            font-size: 0.9rem;
         }
 
         .status-dot {
             width: 8px;
             height: 8px;
-            background: var(--success);
             border-radius: 50%;
-            animation: pulse 2s infinite;
+            background: var(--success);
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        .chat-window {
+        .chat-messages {
             flex: 1;
-            padding: 2rem;
+            background: white;
+            padding: 1.5rem;
             overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            background: rgba(248, 250, 252, 0.5);
+            border-left: 1px solid #e9ecef;
+            border-right: 1px solid #e9ecef;
         }
 
         .message {
+            margin-bottom: 1.5rem;
             display: flex;
             gap: 1rem;
-            max-width: 80%;
-            animation: messageSlide 0.3s ease-out;
-        }
-
-        @keyframes messageSlide {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
 
         .message.user {
-            align-self: flex-end;
             flex-direction: row-reverse;
         }
 
@@ -299,79 +207,87 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
+            font-weight: 700;
             flex-shrink: 0;
         }
 
         .message.user .message-avatar {
-            background: linear-gradient(135deg, var(--primary), var(--accent));
+            background: var(--primary);
             color: white;
         }
 
-        .message.ai .message-avatar {
-            background: linear-gradient(135deg, var(--success), #059669);
-            color: white;
-        }
-
-        .message-bubble {
-            padding: 1rem 1.5rem;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            position: relative;
-        }
-
-        .message.user .message-bubble {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-            border-bottom-right-radius: 4px;
-        }
-
-        .message.ai .message-bubble {
-            background: white;
-            color: var(--secondary);
-            border: 1px solid var(--gray-light);
-            border-bottom-left-radius: 4px;
+        .message.bot .message-avatar {
+            background: var(--light);
+            color: var(--dark);
         }
 
         .message-content {
-            margin-bottom: 0.5rem;
+            max-width: 70%;
+        }
+
+        .message.user .message-content {
+            background: var(--primary);
+            color: white;
+            padding: 1rem;
+            border-radius: var(--radius) 0 var(--radius) var(--radius);
+        }
+
+        .message.bot .message-content {
+            background: var(--light);
+            color: var(--dark);
+            padding: 1rem;
+            border-radius: 0 var(--radius) var(--radius) var(--radius);
         }
 
         .message-time {
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             opacity: 0.7;
-            text-align: left;
+            margin-top: 0.5rem;
         }
 
-        .message.user .message-time {
-            text-align: right;
+        .quick-replies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .quick-reply {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 50px;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .quick-reply:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
         }
 
         .chat-input-container {
-            padding: 1.5rem 2rem;
             background: white;
-            border-top: 1px solid var(--gray-light);
+            padding: 1.5rem;
+            border-radius: 0 0 var(--radius) var(--radius);
+            border: 1px solid #e9ecef;
+            border-top: none;
         }
 
-        .chat-form {
+        .chat-input-wrapper {
             display: flex;
             gap: 1rem;
             align-items: flex-end;
         }
 
-        .input-group {
-            flex: 1;
-            position: relative;
-        }
-
         .chat-input {
-            width: 100%;
-            padding: 1rem 1.5rem;
-            border: 2px solid var(--gray-light);
-            border-radius: 50px;
+            flex: 1;
+            border: 1px solid #e9ecef;
+            border-radius: var(--radius);
+            padding: 1rem;
             font-family: 'Cairo', sans-serif;
-            font-size: 1rem;
-            transition: var(--transition);
             resize: none;
             min-height: 60px;
             max-height: 120px;
@@ -380,459 +296,344 @@
         .chat-input:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
-        .send-btn {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        .send-button {
+            background: var(--primary);
             color: white;
             border: none;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: var(--transition);
-            box-shadow: var(--shadow);
-            font-size: 1.2rem;
-        }
-
-        .send-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .send-btn:active {
-            transform: translateY(0);
-        }
-
-        .chat-actions {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-
-        .action-btn {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            padding: 0.75rem 1.5rem;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: var(--transition);
-            font-family: 'Cairo', sans-serif;
-            font-weight: 600;
-            backdrop-filter: blur(10px);
-        }
-
-        .action-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
-        }
-
-        /* Typing Indicator جديد */
-        .typing-indicator {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 1rem;
-            background: white;
             border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            max-width: fit-content;
-            margin-bottom: 1rem;
-        }
-
-        .typing-dots {
+            width: 50px;
+            height: 50px;
             display: flex;
-            gap: 0.25rem;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
         }
 
-        .typing-dot {
-            width: 8px;
-            height: 8px;
+        .send-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .send-button:disabled {
             background: var(--gray);
-            border-radius: 50%;
-            animation: typing 1.4s infinite ease-in-out;
+            cursor: not-allowed;
+            transform: none;
         }
 
-        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
-        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
-
-        @keyframes typing {
-            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
-            40% { transform: scale(1); opacity: 1; }
-        }
-
-        /* Footer جديد */
-        .footer {
-            background: rgba(15, 23, 42, 0.9);
-            color: white;
-            text-align: center;
-            padding: 2rem;
-            margin-top: 3rem;
-        }
-
-        /* Responsive Design */
+        /* Responsive */
         @media (max-width: 768px) {
-            .nav-links {
+            .nav-menu {
                 display: none;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                right: 0;
+                background: white;
+                width: 200px;
+                padding: 1rem;
+                box-shadow: var(--shadow-lg);
+                border-radius: var(--radius);
+                gap: 1rem;
             }
-
-            .nav-toggle {
+            
+            .nav-menu.active {
+                display: flex;
+            }
+            
+            .mobile-menu-btn {
                 display: block;
             }
-
-            .hero {
-                padding: 3rem 1.5rem;
-                margin: 1rem;
-            }
-
-            .hero h1 {
-                font-size: 2.2rem;
-            }
-
-            .chat-section {
-                padding: 0 1rem;
-            }
-
+            
             .chat-container {
-                height: 500px;
+                margin: 1rem auto;
+                height: calc(100vh - 150px);
             }
-
-            .chat-header {
-                padding: 1rem 1.5rem;
-            }
-
-            .chat-window {
-                padding: 1.5rem;
-            }
-
-            .message {
-                max-width: 90%;
-            }
-
-            .chat-input-container {
-                padding: 1rem 1.5rem;
+            
+            .message-content {
+                max-width: 85%;
             }
         }
 
-        @media (max-width: 480px) {
-            .nav-container {
+        @media (max-width: 576px) {
+            .chat-header {
                 padding: 1rem;
             }
-
-            .hero {
-                padding: 2rem 1rem;
+            
+            .chat-messages {
+                padding: 1rem;
             }
-
-            .hero h1 {
-                font-size: 1.8rem;
+            
+            .chat-input-container {
+                padding: 1rem;
             }
-
-            .section-header h2 {
-                font-size: 2rem;
+            
+            .message {
+                gap: 0.5rem;
             }
-
-            .chat-container {
-                height: 450px;
+            
+            .message-avatar {
+                width: 35px;
+                height: 35px;
             }
-
-            .message-bubble {
-                padding: 0.75rem 1rem;
-            }
-
-            .send-btn {
-                width: 50px;
-                height: 50px;
-            }
-        }
-
-        /* تأثيرات إضافية */
-        .floating {
-            animation: floating 3s ease-in-out infinite;
-        }
-
-        @keyframes floating {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .gradient-text {
-            background: linear-gradient(135deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
         }
     </style>
 </head>
 <body>
-    <!-- Header جديد -->
+    <!-- Header -->
     <header class="header">
-        <div class="nav-container">
+        <div class="header-container">
             <a href="index.html" class="logo">
-                <span class="logo-icon">🩺</span>
+                <i class="fas fa-stethoscope logo-icon"></i>
                 <span class="logo-text">تشخيص فوري</span>
             </a>
             
             <nav>
-                <ul class="nav-links">
-                    <li><a href="index.html">الرئيسية</a></li>
-                    <li><a href="diagnosis.html">التشخيص</a></li>
-                    <li><a href="chat.html" class="active">محادثة AI</a></li>
-                    <!-- تم إخفاء تسجيل الدخول -->
-                    <li><a href="index.html#about">عن التطبيق</a></li>
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link"><i class="fas fa-home"></i> الرئيسية</a></li>
+                    <li><a href="diagnosis.html" class="nav-link"><i class="fas fa-diagnoses"></i> التشخيص</a></li>
+                    <li><a href="chat.html" class="nav-link active"><i class="fas fa-robot"></i> محادثة AI</a></li>
+                    <li><a href="hospitals.html" class="nav-link"><i class="fas fa-hospital"></i> المستشفيات</a></li>
+                    <li><a href="settings.html" class="nav-link"><i class="fas fa-cog"></i> الإعدادات</a></li>
                 </ul>
             </nav>
             
-            <button class="nav-toggle">☰</button>
+            <div class="user-actions">
+                <div class="user-profile">
+                    <div class="user-avatar">م</div>
+                    <span>مستخدم</span>
+                </div>
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
         </div>
     </header>
 
-    <!-- Hero Section جديدة -->
-    <section class="hero">
-        <span class="hero-badge floating">محادثة ذكية</span>
-        <h1>المساعد الطبي الذكي</h1>
-        <p>تواصل مع مساعدنا الطبي المدعوم بالذكاء الاصطناعي للحصول على إجابات فورية لاستفساراتك الصحية.</p>
-    </section>
-
-    <!-- Chat Section جديدة -->
-    <section class="chat-section">
-        <div class="section-header">
-            <h2>محادثة فورية</h2>
-            <p>اطرح أسئلتك الصحية وسيقوم مساعدنا الذكي بالرد عليها فوراً.</p>
-        </div>
-        
-        <div class="chat-container">
-            <div class="chat-header">
-                <div class="chat-avatar">🤖</div>
-                <div class="chat-header-info">
-                    <h3>المساعد الطبي الذكي</h3>
-                    <p>متاح للمساعدة</p>
-                </div>
+    <!-- Chat Container -->
+    <div class="chat-container">
+        <div class="chat-header">
+            <div class="chat-avatar">
+                <i class="fas fa-robot"></i>
+            </div>
+            <div class="chat-info">
+                <h2>المساعد الطبي الذكي</h2>
                 <div class="chat-status">
                     <span class="status-dot"></span>
                     <span>متصل الآن</span>
                 </div>
             </div>
-            
-            <div class="chat-window" id="chatWindow">
-                <!-- الرسائل تظهر هنا -->
-                <div class="message ai">
-                    <div class="message-avatar">🤖</div>
-                    <div class="message-bubble">
-                        <div class="message-content">
-                            مرحباً! أنا المساعد الطبي الذكي. كيف يمكنني مساعدتك اليوم؟
-                        </div>
-                        <div class="message-time">الآن</div>
-                    </div>
+        </div>
+
+        <div class="chat-messages" id="chatMessages">
+            <div class="message bot">
+                <div class="message-avatar">
+                    <i class="fas fa-robot"></i>
                 </div>
-            </div>
-            
-            <div class="chat-input-container">
-                <form class="chat-form" id="chatForm">
-                    <div class="input-group">
-                        <textarea 
-                            class="chat-input" 
-                            id="chatInput" 
-                            placeholder="اكتب رسالتك هنا..." 
-                            rows="1"
-                        ></textarea>
+                <div class="message-content">
+                    <p>مرحباً! أنا المساعد الطبي الذكي. كيف يمكنني مساعدتك اليوم؟</p>
+                    <div class="quick-replies">
+                        <div class="quick-reply" onclick="sendQuickReply('أعاني من صداع')">أعاني من صداع</div>
+                        <div class="quick-reply" onclick="sendQuickReply('لدي حرارة مرتفعة')">لدي حرارة مرتفعة</div>
+                        <div class="quick-reply" onclick="sendQuickReply('أشعر بألم في البطن')">أشعر بألم في البطن</div>
+                        <div class="quick-reply" onclick="sendQuickReply('استشارة عامة')">استشارة عامة</div>
                     </div>
-                    <button type="submit" class="send-btn">
-                        ➤
-                    </button>
-                </form>
-                
-                <div class="chat-actions">
-                    <button class="action-btn" id="clearChatBtn">مسح المحادثة</button>
-                    <button class="action-btn" id="suggestQuestionsBtn">اقتراح أسئلة</button>
+                    <div class="message-time">الآن</div>
                 </div>
             </div>
         </div>
-    </section>
 
-    <!-- Footer جديد -->
-    <footer class="footer">
-        <p>© 2025 تشخيص فوري للأعراض. جميع الحقوق محفوظة.</p>
-    </footer>
+        <div class="chat-input-container">
+            <div class="chat-input-wrapper">
+                <textarea class="chat-input" id="messageInput" placeholder="اكتب رسالتك هنا..." rows="1"></textarea>
+                <button class="send-button" id="sendButton">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const chatWindow = document.getElementById("chatWindow");
-            const chatForm = document.getElementById("chatForm");
-            const chatInput = document.getElementById("chatInput");
-            const clearChatBtn = document.getElementById("clearChatBtn");
-            const suggestQuestionsBtn = document.getElementById("suggestQuestionsBtn");
-
-            const STORAGE_KEY = "aiChatHistory";
-
-            // ردود الذكاء الاصطناعي
-            const aiResponses = [
-                {
-                    triggers: ["صداع", "وجع راس", "ألم راس"],
-                    reply: "قد يكون الصداع مرتبطًا بالإرهاق أو الجفاف أو ضعف النظر. هل تشعر بارتفاع في الحرارة أو دوخة؟"
-                },
-                {
-                    triggers: ["كحة", "سعال", "كحه", "تعب تنفس", "ضيق"],
-                    reply: "السعال المستمر قد يشير إلى التهاب تنفسي أو حساسية. راقب الأعراض، وإذا صاحبها ضيق تنفس أو حرارة مرتفعة قم بمراجعة طبيب الصدر."
-                },
-                {
-                    triggers: ["حمى", "حرارة", "سخونة"],
-                    reply: "الحمى علامة على وجود عدوى. احرص على شرب السوائل وخذ قسطًا من الراحة. إذا استمرت أكثر من ٤٨ ساعة أو تجاوزت ٣٩° تواصل مع الطبيب."
-                },
-                {
-                    triggers: ["قلقان", "توتر", "مش بنام", "أرق", "قلق"],
-                    reply: "يبدو أنك تمر بتوتر نفسي. حاول ممارسة تمارين التنفس العميق قبل النوم وتجنب المنبهات. إن استمر الأرق، استشر أخصائي صحة نفسية."
-                },
-                {
-                    triggers: ["مغص", "بطن", "إسهال", "اسهال", "غثيان"],
-                    reply: "آلام البطن قد ترتبط بعسر الهضم أو عدوى بسيطة. تناول أطعمة خفيفة واشرب ماء بكثرة. إذا ظهر قيء أو استمر الألم، تواصل مع طبيب باطنة."
-                },
-                {
-                    triggers: ["ضغط", "ارتفاع الضغط"],
-                    reply: "ارتفاع الضغط يحتاج مراقبة دقيقة. تأكد من قياس الضغط أكثر من مرة وتجنب الملح. إذا كان الارتفاع مستمرًا راجع طبيب القلب أو الباطنة."
-                }
-            ];
-
-            const fallbackResponses = [
-                "أحتاج لمعلومات إضافية عن الأعراض التي تشعر بها. هل يمكنك التوضيح أكثر؟",
-                "أخبرني منذ متى بدأت الأعراض وهل هناك أعراض مصاحبة أخرى؟",
-                "أفهمك. تذكر أن النتائج هنا استرشادية ولا تغني عن زيارة الطبيب عند الحاجة."
-            ];
-
-            // إضافة رسالة
-            const appendMessage = (author, message) => {
-                const messageDiv = document.createElement("div");
-                messageDiv.className = `message ${author}`;
-                
-                const avatar = author === 'user' ? '🙂' : '🤖';
-                const name = author === 'user' ? 'أنت' : 'المساعد الذكي';
-                
-                messageDiv.innerHTML = `
-                    <div class="message-avatar">${avatar}</div>
-                    <div class="message-bubble">
-                        <div class="message-content">${message}</div>
-                        <div class="message-time">${new Date().toLocaleTimeString('ar-EG', { 
-                            hour: '2-digit', 
-                            minute: '2-digit' 
-                        })}</div>
-                    </div>
-                `;
-                
-                chatWindow.appendChild(messageDiv);
-                chatWindow.scrollTop = chatWindow.scrollHeight;
-            };
-
-            // مؤشر الكتابة
-            const showTypingIndicator = () => {
-                const typingDiv = document.createElement("div");
-                typingDiv.className = "typing-indicator";
-                typingDiv.id = "typingIndicator";
-                typingDiv.innerHTML = `
-                    <div class="message-avatar">🤖</div>
-                    <div class="typing-dots">
-                        <span class="typing-dot"></span>
-                        <span class="typing-dot"></span>
-                        <span class="typing-dot"></span>
-                    </div>
-                    <span>يكتب...</span>
-                `;
-                chatWindow.appendChild(typingDiv);
-                chatWindow.scrollTop = chatWindow.scrollHeight;
-            };
-
-            const removeTypingIndicator = () => {
-                const indicator = document.getElementById("typingIndicator");
-                if (indicator) {
-                    indicator.remove();
-                }
-            };
-
-            // الحصول على رد AI
-            const getAIResponse = (message) => {
-                const lowerMessage = message.toLowerCase();
-                const matched = aiResponses.find((entry) =>
-                    entry.triggers.some((trigger) => lowerMessage.includes(trigger))
-                );
-                if (matched) return matched.reply;
-                return fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)];
-            };
-
-            // تحميل السجل
-            const loadHistory = () => {
-                const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-                stored.forEach(({ author, message }) => {
-                    appendMessage(author, message);
+        // وظيفة القائمة المتنقلة
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            const navMenu = document.querySelector('.nav-menu');
+            
+            if (mobileMenuBtn && navMenu) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    navMenu.classList.toggle('active');
                 });
-            };
+            }
 
-            // حفظ الرسالة
-            const saveMessage = (author, message) => {
-                const history = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-                history.push({ author, message });
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(history.slice(-50)));
-            };
+            // إغلاق القائمة عند النقر خارجها
+            document.addEventListener('click', function(event) {
+                if (!event.target.closest('.nav-menu') && !event.target.closest('.mobile-menu-btn')) {
+                    navMenu.classList.remove('active');
+                }
+            });
 
-            // إرسال الرسالة
-            chatForm.addEventListener("submit", (e) => {
-                e.preventDefault();
-                const message = chatInput.value.trim();
+            // التحقق من حالة تسجيل الدخول
+            const userSession = localStorage.getItem('userSession') || sessionStorage.getItem('userSession');
+            
+            if (!userSession) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // تحديث معلومات المستخدم
+            try {
+                const userData = JSON.parse(userSession);
+                const userAvatar = document.querySelector('.user-avatar');
+                const userName = document.querySelector('.user-profile span');
+                
+                if (userData.name && userAvatar) {
+                    userAvatar.textContent = userData.name.charAt(0);
+                }
+                if (userData.name && userName) {
+                    userName.textContent = userData.name;
+                }
+            } catch (e) {
+                console.log('خطأ في تحليل بيانات المستخدم');
+            }
+
+            // إدارة الدردشة
+            const chatMessages = document.getElementById('chatMessages');
+            const messageInput = document.getElementById('messageInput');
+            const sendButton = document.getElementById('sendButton');
+
+            // إرسال رسالة
+            function sendMessage() {
+                const message = messageInput.value.trim();
                 if (!message) return;
 
-                appendMessage("user", message);
-                saveMessage("user", message);
-                chatInput.value = "";
+                // إضافة رسالة المستخدم
+                addMessage(message, 'user');
+                messageInput.value = '';
 
-                showTypingIndicator();
-
+                // محاكاة رد المساعد
                 setTimeout(() => {
-                    removeTypingIndicator();
-                    const reply = getAIResponse(message);
-                    appendMessage("ai", reply);
-                    saveMessage("ai", reply);
-                }, 1000 + Math.random() * 1000);
-            });
+                    const botResponse = generateBotResponse(message);
+                    addMessage(botResponse, 'bot');
+                }, 1000);
+            }
 
-            // مسح المحادثة
-            clearChatBtn.addEventListener("click", () => {
-                if (confirm("هل تريد مسح كل المحادثة؟")) {
-                    localStorage.removeItem(STORAGE_KEY);
-                    chatWindow.innerHTML = `
-                        <div class="message ai">
-                            <div class="message-avatar">🤖</div>
-                            <div class="message-bubble">
-                                <div class="message-content">
-                                    مرحباً! أنا المساعد الطبي الذكي. كيف يمكنني مساعدتك اليوم؟
-                                </div>
-                                <div class="message-time">الآن</div>
-                            </div>
-                        </div>
-                    `;
+            // إضافة رسالة للدردشة
+            function addMessage(text, sender) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${sender}`;
+                
+                const avatarDiv = document.createElement('div');
+                avatarDiv.className = 'message-avatar';
+                
+                if (sender === 'user') {
+                    const userData = JSON.parse(localStorage.getItem('userSession') || sessionStorage.getItem('userSession'));
+                    avatarDiv.textContent = userData?.name?.charAt(0) || 'م';
+                } else {
+                    avatarDiv.innerHTML = '<i class="fas fa-robot"></i>';
+                }
+                
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'message-content';
+                
+                const textP = document.createElement('p');
+                textP.textContent = text;
+                
+                const timeDiv = document.createElement('div');
+                timeDiv.className = 'message-time';
+                timeDiv.textContent = getCurrentTime();
+                
+                contentDiv.appendChild(textP);
+                contentDiv.appendChild(timeDiv);
+                
+                // إضافة ردود سريعة للرسائل الآلية
+                if (sender === 'bot') {
+                    const quickReplies = generateQuickReplies(text);
+                    if (quickReplies) {
+                        const repliesDiv = document.createElement('div');
+                        repliesDiv.className = 'quick-replies';
+                        quickReplies.forEach(reply => {
+                            const replyBtn = document.createElement('div');
+                            replyBtn.className = 'quick-reply';
+                            replyBtn.textContent = reply;
+                            replyBtn.onclick = () => sendQuickReply(reply);
+                            repliesDiv.appendChild(replyBtn);
+                        });
+                        contentDiv.appendChild(repliesDiv);
+                    }
+                }
+                
+                messageDiv.appendChild(avatarDiv);
+                messageDiv.appendChild(contentDiv);
+                
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            // توليد رد المساعد
+            function generateBotResponse(userMessage) {
+                const responses = {
+                    'صداع': 'الصداع يمكن أن يكون بسبب عدة عوامل مثل التوتر، الجفاف، أو مشاكل في النظر. هل يمكنك描述 شدة الألم ومكانه؟',
+                    'حرارة': 'ارتفاع درجة الحرارة قد يدل على وجود عدوى. كم تبلغ درجة حرارتك؟ وهل هناك أعراض أخرى؟',
+                    'بطن': 'آلام البطن يمكن أن تكون بسبب عسر هضم، أو مشاكل أخرى. أين exactly موقع الألم؟',
+                    'سعال': 'السعال قد يكون علامة على نزلة برد أو التهاب. هل السعال جاف أم مصحوب ببلغم؟',
+                    'default': 'شكراً لمشاركة أعراضك. للحصول على تشخيص دقيق، أنصحك بزيارة الطبيب. هل تريد أن أساعدك في العثور على مستشفى قريب؟'
+                };
+
+                for (const [key, response] of Object.entries(responses)) {
+                    if (userMessage.includes(key)) {
+                        return response;
+                    }
+                }
+                return responses.default;
+            }
+
+            // توليد ردود سريعة
+            function generateQuickReplies(botMessage) {
+                if (botMessage.includes('درجة حرارتك')) {
+                    return ['أقل من 38°', 'بين 38° و 39°', 'أكثر من 39°'];
+                }
+                if (botMessage.includes('موقع الألم')) {
+                    return ['أعلى البطن', 'أسفل البطن', 'الجانب الأيمن', 'الجانب الأيسر'];
+                }
+                if (botMessage.includes('مستشفى قريب')) {
+                    return ['نعم، أظهر المستشفيات', 'لا، شكراً'];
+                }
+                return null;
+            }
+
+            // إرسال رد سريع
+            window.sendQuickReply = function(reply) {
+                addMessage(reply, 'user');
+                
+                setTimeout(() => {
+                    const botResponse = generateBotResponse(reply);
+                    addMessage(botResponse, 'bot');
+                }, 1000);
+            };
+
+            // الحصول على الوقت الحالي
+            function getCurrentTime() {
+                return new Date().toLocaleTimeString('ar-EG', { 
+                    hour: '2-digit', 
+                    minute: '2-digit',
+                    hour12: true 
+                });
+            }
+
+            // أحداث الإدخال
+            messageInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
                 }
             });
 
-            // اقتراح أسئلة
-            suggestQuestionsBtn.addEventListener("click", () => {
-                const questions = [
-                    "ما هي أعراض الإنفلونزا؟",
-                    "كيف أتعامل مع ارتفاع ضغط الدم؟",
-                    "ما أسباب الصداع المستمر؟",
-                    "كيف أعرف إذا كنت مصاباً بالحساسية؟"
-                ];
-                
-                const randomQuestion = questions[Math.floor(Math.random() * questions.length)];
-                chatInput.value = randomQuestion;
-                chatInput.focus();
-            });
+            sendButton.addEventListener('click', sendMessage);
 
-            // تحميل السجل عند البدء
-            loadHistory();
-
-            // تكبير حقل الإدخال تلقائياً
-            chatInput.addEventListener('input', function() {
+            // تكبير منطقة النص تلقائياً
+            messageInput.addEventListener('input', function() {
                 this.style.height = 'auto';
                 this.style.height = (this.scrollHeight) + 'px';
             });
