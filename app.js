@@ -174,6 +174,84 @@ document.addEventListener("DOMContentLoaded", () => {
             a:not(.btn-animate):hover::after {
                 width: 100%;
             }
+
+            /* زر تبديل الوضع الداكن */
+            .theme-toggle {
+                background: none;
+                border: none;
+                font-size: 1.3rem;
+                color: var(--color-secondary, #1e293b);
+                cursor: pointer;
+                padding: 0.5rem;
+                border-radius: 50%;
+                transition: all 0.3s;
+                width: 44px;
+                height: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: rgba(139, 92, 246, 0.1);
+            }
+
+            .theme-toggle:hover {
+                background-color: var(--color-primary);
+                color: white;
+                transform: rotate(15deg);
+            }
+
+            /* متغيرات الوضع الداكن */
+            [data-theme="dark"] {
+                --color-bg: #0F0F1A;
+                --color-surface: #1A1A2E;
+                --color-surface-alt: #2D2B42;
+                --color-primary: #A78BFA;
+                --color-primary-dark: #7C3AED;
+                --color-secondary: #E2E8F0;
+                --color-muted: #94A3B8;
+                --color-border: rgba(167, 139, 250, 0.15);
+                --color-success: #10b981;
+                --color-warning: #f59e0b;
+                --color-danger: #ef4444;
+            }
+
+            [data-theme="dark"] body {
+                color: var(--color-secondary);
+            }
+
+            [data-theme="dark"] .site-header {
+                background-color: rgba(26, 26, 46, 0.95);
+                border-bottom-color: rgba(167, 139, 250, 0.1);
+            }
+
+            [data-theme="dark"] .hero {
+                background: linear-gradient(135deg, rgba(167, 139, 250, 0.05), rgba(124, 58, 237, 0.03)), linear-gradient(140deg, rgba(26, 26, 46, 0.95), rgba(26, 26, 46, 0.85));
+            }
+
+            [data-theme="dark"] .feature,
+            [data-theme="dark"] .panel,
+            [data-theme="dark"] .diagnosis-panel,
+            [data-theme="dark"] .login-panel,
+            [data-theme="dark"] .user-dashboard {
+                background: var(--color-surface);
+                border-color: var(--color-border);
+            }
+
+            [data-theme="dark"] input,
+            [data-theme="dark"] select,
+            [data-theme="dark"] textarea {
+                background: rgba(45, 43, 66, 0.5);
+                border-color: rgba(167, 139, 250, 0.3);
+                color: var(--color-secondary);
+            }
+
+            [data-theme="dark"] .emergency-btn {
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            }
+
+            [data-theme="dark"] .timeline__item {
+                background: rgba(167, 139, 250, 0.08);
+                border-color: rgba(167, 139, 250, 0.15);
+            }
         `;
         document.head.appendChild(style);
     };
@@ -945,29 +1023,183 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    // تهيئة الصفحة
-    addButtonStyles(); // إضافة الأنماط أولاً
-    checkExistingSession();
-    addInputEffects();
-    applyButtonAnimations(); // تطبيق الحركات على الأزرار
-    createDashboardSidebar(); // إنشاء القائمة الجانبية للداشبورد
+    // نظام الإعدادات
+    const initSettings = () => {
+        // كائن الإعدادات الافتراضي
+        const defaultSettings = {
+            language: 'ar',
+            emailNotifications: true,
+            appNotifications: true,
+            dataCollection: true,
+            userActivity: false,
+            publicProfile: false,
+            performanceMode: false,
+            autoBackup: true,
+            autoUpdate: true,
+            theme: 'light'
+        };
 
-    // إضافة تأثير النقر على أزرار الطوارئ
-    document.querySelectorAll('.emergency-btn').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            this.style.transform = 'scale(0.95)';
-            setTimeout(() => {
-                this.style.transform = '';
-            }, 150);
+        // تحميل الإعدادات
+        const loadSettings = () => {
+            const savedSettings = localStorage.getItem('idos_user_settings');
+            return savedSettings ? JSON.parse(savedSettings) : { ...defaultSettings };
+        };
+
+        // حفظ الإعدادات
+        const saveSettings = (settings) => {
+            localStorage.setItem('idos_user_settings', JSON.stringify(settings));
+        };
+
+        // تطبيق الإعدادات على الصفحة الحالية
+        const applySettings = () => {
+            const settings = loadSettings();
             
-            console.log('تم النقر على زر الطوارئ:', this.querySelector('strong').textContent);
-        });
-    });
+            // تطبيق الوضع الداكن/الفاتح
+            document.documentElement.setAttribute('data-theme', settings.theme);
+            
+            // تطبيق اللغة
+            if (settings.language === 'en') {
+                // يمكنك إضافة منطق لتغيير اللغة هنا
+                document.documentElement.dir = 'ltr';
+                document.documentElement.lang = 'en';
+            }
+            
+            // يمكنك إضافة تطبيق إعدادات أخرى هنا
+            console.log('تم تطبيق الإعدادات:', settings);
+        };
 
-    // إعادة تطبيق الحركات عند تغيير حجم النافذة (للتأكد من تطبيقها على جميع العناصر)
-    window.addEventListener('resize', () => {
-        setTimeout(applyButtonAnimations, 300);
-    });
+        // الحصول على إعداد معين
+        const getSetting = (key) => {
+            const settings = loadSettings();
+            return settings[key] !== undefined ? settings[key] : defaultSettings[key];
+        };
+
+        // تحديث إعداد معين
+        const updateSetting = (key, value) => {
+            const settings = loadSettings();
+            settings[key] = value;
+            saveSettings(settings);
+            applySettings();
+        };
+
+        // دالة لتبديل الوضع الداكن
+        const toggleDarkMode = () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            updateSetting('theme', newTheme);
+            updateThemeIcon();
+        };
+
+        // تصدير الإعدادات
+        const exportSettings = () => {
+            const settings = loadSettings();
+            const dataStr = JSON.stringify(settings, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', 'idos-settings.json');
+            linkElement.click();
+        };
+
+        // تطبيق الإعدادات عند التحميل
+        applySettings();
+
+        // جعل الوظائف متاحة عالمياً
+        window.getUserSettings = loadSettings;
+        window.getSetting = getSetting;
+        window.updateSetting = updateSetting;
+        window.toggleDarkMode = toggleDarkMode;
+        window.exportSettings = exportSettings;
+
+        // إضافة زر تبديل الوضع الداكن للرأس
+        addDarkModeToggle();
+    };
+
+    // إضافة زر تبديل الوضع الداكن للرأس
+    const addDarkModeToggle = () => {
+        // التحقق مما إذا كان الزر موجوداً بالفعل
+        if (document.getElementById('darkModeToggle')) return;
+
+        const themeToggle = document.createElement('button');
+        themeToggle.id = 'darkModeToggle';
+        themeToggle.className = 'btn-animate theme-toggle';
+        themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+        themeToggle.title = 'تبديل الوضع الداكن';
+        themeToggle.setAttribute('aria-label', 'تبديل الوضع الداكن/الفاتح');
+
+        // إضافة إلى الرأس إذا كان موجوداً
+        const headerActions = document.querySelector('.user-actions') || 
+                             document.querySelector('.main-nav')?.parentElement || 
+                             document.querySelector('.nav-container');
+        
+        if (headerActions) {
+            headerActions.insertBefore(themeToggle, headerActions.firstChild);
+        } else {
+            // البحث عن موقع مناسب في الصفحة
+            const header = document.querySelector('header') || document.body;
+            if (header) {
+                header.appendChild(themeToggle);
+                themeToggle.style.position = 'absolute';
+                themeToggle.style.top = '1rem';
+                themeToggle.style.left = '1rem';
+            }
+        }
+
+        // إضافة حدث النقر
+        themeToggle.addEventListener('click', () => {
+            window.toggleDarkMode?.();
+        });
+
+        // تحديث الأيقونة بناءً على الوضع الحالي
+        const updateThemeIcon = () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+            const icon = themeToggle.querySelector('i');
+            if (currentTheme === 'dark') {
+                icon.className = 'fas fa-sun';
+                themeToggle.title = 'التبديل إلى الوضع الفاتح';
+            } else {
+                icon.className = 'fas fa-moon';
+                themeToggle.title = 'التبديل إلى الوضع الداكن';
+            }
+        };
+
+        // تحديث الأيقونة عند التحميل
+        setTimeout(updateThemeIcon, 100);
+        
+        // جعل الدالة متاحة للوظائف الأخرى
+        window.updateThemeIcon = updateThemeIcon;
+    };
+
+    // تهيئة الصفحة
+    const init = () => {
+        addButtonStyles();
+        checkExistingSession();
+        addInputEffects();
+        applyButtonAnimations();
+        createDashboardSidebar();
+        initSettings();
+        
+        // إضافة تأثير النقر على أزرار الطوارئ
+        document.querySelectorAll('.emergency-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+                
+                console.log('تم النقر على زر الطوارئ:', this.querySelector('strong').textContent);
+            });
+        });
+
+        // إعادة تطبيق الحركات عند تغيير حجم النافذة (للتأكد من تطبيقها على جميع العناصر)
+        window.addEventListener('resize', () => {
+            setTimeout(applyButtonAnimations, 300);
+        });
+    };
+
+    // استدعاء التهيئة
+    init();
 });
 
 // Google Maps callback
