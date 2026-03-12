@@ -1,1337 +1,775 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const body = document.body;
-    const preloader = document.getElementById("preloader");
-    const navToggle = document.querySelector(".nav-toggle");
-    const mobileMenu = document.getElementById("mobileMenu");
-    const timeline = document.getElementById("insightsTimeline");
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المساعد الطبي الذكي | IDOS</title>
+    <!-- Font Awesome للأيقونات -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- مكتبة Dexie لقاعدة البيانات -->
+    <script src="https://unpkg.com/dexie@3.2.4/dist/dexie.js"></script>
+    <style>
+        /* استيراد ملف CSS الرئيسي */
+        @import url('styles.css');
 
-    const bpValue = document.getElementById("bpValue");
-    const bpStatus = document.getElementById("bpStatus");
-    const glucoseValue = document.getElementById("glucoseValue");
-    const glucoseStatus = document.getElementById("glucoseStatus");
-    const pulseValue = document.getElementById("pulseValue");
-    const pulseStatus = document.getElementById("pulseStatus");
+        /* أنماط إضافية مخصصة لصفحة المحادثة */
+        .chat-page-wrapper {
+            min-height: 100vh;
+            background: linear-gradient(145deg, #f0e6ff, #e6d9ff);
+            padding: 1.5rem;
+        }
 
-    const pages = document.querySelectorAll(".page");
+        .chat-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.15);
+            overflow: hidden;
+            border: 1px solid #d9c9ff;
+        }
 
-    // عناصر تسجيل الدخول والواجهات
-    const loginBtn = document.getElementById("loginBtn");
-    const mobileLoginBtn = document.getElementById("mobileLoginBtn");
-    const loginModal = document.getElementById("loginModal");
-    const successModal = document.getElementById("successModal");
-    const closeLoginModal = document.getElementById("closeLoginModal");
-    const closeSuccessModal = document.getElementById("closeSuccessModal");
-    const continueBtn = document.getElementById("continueBtn");
-    const loginForm = document.getElementById("loginForm");
-    const loginMessage = document.getElementById("loginMessage");
-    const loginSection = document.getElementById("loginSection");
-    const userSection = document.getElementById("userSection");
-    const authSection = document.getElementById("authSection");
-    const mobileAuthSection = document.getElementById("mobileAuthSection");
-    const logoutBtn = document.getElementById("logoutBtn");
-    const userName = document.getElementById("userName");
-    const userEmail = document.getElementById("userEmail");
+        /* الهيدر العلوي - أبيض */
+        .chat-header {
+            background: white;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            border-bottom: 2px solid #b79eff;
+        }
 
-    // التحقق من وجود الأنماط قبل الإضافة
-    const addButtonStyles = () => {
-        if (document.getElementById('button-styles')) return;
-        
-        const style = document.createElement('style');
-        style.id = 'button-styles';
-        style.textContent = `
-            /* تأثيرات الحركة للأزرار */
-            .btn-animate {
-                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-                transform: translateY(0) scale(1) !important;
-                position: relative !important;
-                overflow: hidden !important;
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .header-right h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #7c4dff;
+            font-weight: 800;
+        }
+
+        .header-right h1 i {
+            color: #7c4dff;
+        }
+
+        /* القائمة العلوية - بيضاء */
+        .top-nav ul {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 0.5rem;
+        }
+
+        .top-nav a {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            color: #555555;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+            background: #f8f4ff;
+            border: 1px solid #e6d9ff;
+        }
+
+        .top-nav a:hover {
+            background: #b79eff;
+            color: white;
+            border-color: #9f7aea;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(139, 92, 246, 0.2);
+        }
+
+        .top-nav a.active {
+            background: #9f7aea;
+            color: white;
+            border-color: #8b5cf6;
+        }
+
+        /* صندوق المحادثة - موف فاتح */
+        .chat-main {
+            height: 600px;
+            display: flex;
+            flex-direction: column;
+            background: #f5f0ff;
+        }
+
+        .chat-window {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            background: #f5f0ff;
+        }
+
+        /* تنسيقات المحادثة */
+        .message {
+            display: flex;
+            width: 100%;
+            animation: fadeIn 0.25s ease-out;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message.ai {
+            justify-content: flex-start;
+        }
+
+        .bubble {
+            max-width: 70%;
+            padding: 1rem 1.5rem;
+            border-radius: 1.8rem;
+            font-size: 1rem;
+            line-height: 1.6;
+            word-wrap: break-word;
+            box-shadow: 0 2px 10px rgba(139, 92, 246, 0.1);
+        }
+
+        .user .bubble {
+            background: #d4c2ff;
+            color: #2d1f4a;
+            border-bottom-left-radius: 0.5rem;
+        }
+
+        .ai .bubble {
+            background: #ffffff;
+            color: #4a4a4a;
+            border-bottom-right-radius: 0.5rem;
+            border: 1px solid #e6d9ff;
+        }
+
+        .timestamp {
+            font-size: 0.7rem;
+            opacity: 0.6;
+            margin-top: 5px;
+            display: block;
+            text-align: left;
+            color: #7c6a9c;
+        }
+
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0.8rem 1.8rem;
+            background: white;
+            border-radius: 2rem;
+            width: fit-content;
+            border-bottom-right-radius: 0.5rem;
+            border: 1px solid #e6d9ff;
+        }
+
+        .typing-dots span {
+            width: 8px;
+            height: 8px;
+            background: #9f7aea;
+            border-radius: 50%;
+            display: inline-block;
+            margin-left: 4px;
+            animation: wave 1.3s infinite;
+        }
+
+        .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes wave {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+            30% { transform: translateY(-6px); opacity: 1; }
+        }
+
+        .typing-text {
+            font-size: 0.9rem;
+            color: #7c6a9c;
+            opacity: 0.9;
+        }
+
+        .chat-footer {
+            padding: 1.2rem 1.5rem;
+            background: #f0e6ff;
+            border-top: 1px solid #d9c9ff;
+        }
+
+        .input-form {
+            display: flex;
+            gap: 0.8rem;
+            align-items: center;
+        }
+
+        .input-form input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            border: 2px solid #d9c9ff;
+            background: white;
+            border-radius: 60px;
+            font-size: 1rem;
+            outline: none;
+            color: #4a4a4a;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        .input-form input::placeholder {
+            color: #b39ddb;
+        }
+
+        .input-form input:focus {
+            border-color: #9f7aea;
+            box-shadow: 0 0 0 3px rgba(159, 122, 234, 0.2);
+        }
+
+        .input-form button {
+            background: #9f7aea;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 60px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.2);
+        }
+
+        .input-form button:hover {
+            background: #8b5cf6;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
+        }
+
+        .clear-btn {
+            background: white;
+            border: 1px solid #d9c9ff;
+            border-radius: 40px;
+            padding: 0.4rem 1.2rem;
+            color: #7c6a9c;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .clear-btn:hover {
+            background: #f0e6ff;
+            border-color: #9f7aea;
+            color: #8b5cf6;
+        }
+
+        .chat-window::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .chat-window::-webkit-scrollbar-track {
+            background: #f0e6ff;
+            border-radius: 10px;
+        }
+
+        .chat-window::-webkit-scrollbar-thumb {
+            background: #c4b0ff;
+            border-radius: 10px;
+        }
+
+        .chat-window::-webkit-scrollbar-thumb:hover {
+            background: #9f7aea;
+        }
+
+        @media (max-width: 768px) {
+            .chat-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
             }
             
-            .btn-animate:hover {
-                transform: translateY(-2px) scale(1.02) !important;
-                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
-            }
-            
-            .btn-animate:active {
-                transform: translateY(0) scale(0.98) !important;
-                transition-duration: 0.1s !important;
-            }
-            
-            .btn-animate::after {
-                content: '';
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                width: 0;
-                height: 0;
-                border-radius: 50%;
-                background: rgba(255, 255, 255, 0.3);
-                transform: translate(-50%, -50%);
-                transition: width 0.3s, height 0.3s;
-            }
-            
-            .btn-animate:active::after {
-                width: 100px;
-                height: 100px;
-            }
-            
-            .emergency-btn {
-                animation: pulse-gentle 2s infinite !important;
-                transition: all 0.3s ease !important;
-            }
-            
-            .emergency-btn:hover {
-                animation: none !important;
-                transform: translateY(-3px) scale(1.05) !important;
-                box-shadow: 0 10px 30px rgba(239, 68, 68, 0.4) !important;
-            }
-            
-            @keyframes pulse-gentle {
-                0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
-                50% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
-            }
-            
-            .btn-login, .btn-logout {
-                transition: all 0.3s ease !important;
-                position: relative !important;
-            }
-            
-            .btn-login:hover, .btn-logout:hover {
-                transform: translateX(-5px) !important;
-                padding-right: 15px !important;
-            }
-            
-            dialog button {
-                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
-            }
-            
-            dialog button:hover {
-                transform: translateY(-2px) !important;
-            }
-            
-            dialog button:active {
-                transform: translateY(0) !important;
-            }
-            
-            .nav-toggle {
-                transition: all 0.3s ease !important;
-            }
-            
-            .nav-toggle:hover {
-                transform: rotate(90deg) !important;
-            }
-            
-            .accordion-toggle {
-                transition: all 0.3s ease !important;
-            }
-            
-            .accordion-toggle:hover {
-                transform: translateX(5px) !important;
-            }
-            
-            .accordion-toggle[aria-expanded="true"] {
-                transform: rotate(45deg) !important;
-            }
-            
-            .loading-spinner {
-                animation: spin 1s linear infinite !important;
-            }
-            
-            @keyframes spin {
-                from { transform: rotate(0deg); }
-                to { transform: rotate(360deg); }
-            }
-            
-            a:not(.btn-animate) {
-                transition: all 0.3s ease !important;
-                position: relative !important;
-            }
-            
-            a:not(.btn-animate):hover {
-                transform: translateY(-1px) !important;
-            }
-            
-            a:not(.btn-animate)::after {
-                content: '';
-                position: absolute;
-                width: 0;
-                height: 2px;
-                bottom: -2px;
-                left: 0;
-                background: currentColor;
-                transition: width 0.3s ease;
-            }
-            
-            a:not(.btn-animate):hover::after {
+            .header-right {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
                 width: 100%;
             }
-
-            .theme-toggle {
-                background: none;
-                border: none;
-                font-size: 1.3rem;
-                color: var(--color-secondary, #1e293b);
-                cursor: pointer;
-                padding: 0.5rem;
-                border-radius: 50%;
-                transition: all 0.3s;
-                width: 44px;
-                height: 44px;
-                display: flex;
-                align-items: center;
+            
+            .top-nav ul {
+                flex-wrap: wrap;
+                width: 100%;
+            }
+            
+            .top-nav a {
+                flex: 1 1 auto;
                 justify-content: center;
-                background-color: rgba(139, 92, 246, 0.1);
-            }
-
-            .theme-toggle:hover {
-                background-color: var(--color-primary);
-                color: white;
-                transform: rotate(15deg);
-            }
-
-            [data-theme="dark"] {
-                --color-bg: #0F0F1A;
-                --color-surface: #1A1A2E;
-                --color-surface-alt: #2D2B42;
-                --color-primary: #A78BFA;
-                --color-primary-dark: #7C3AED;
-                --color-secondary: #E2E8F0;
-                --color-muted: #94A3B8;
-                --color-border: rgba(167, 139, 250, 0.15);
-                --color-success: #10b981;
-                --color-warning: #f59e0b;
-                --color-danger: #ef4444;
-            }
-
-            [data-theme="dark"] body {
-                color: var(--color-secondary);
-            }
-
-            [data-theme="dark"] .site-header {
-                background-color: rgba(26, 26, 46, 0.95);
-                border-bottom-color: rgba(167, 139, 250, 0.1);
-            }
-
-            [data-theme="dark"] .hero {
-                background: linear-gradient(135deg, rgba(167, 139, 250, 0.05), rgba(124, 58, 237, 0.03)), linear-gradient(140deg, rgba(26, 26, 46, 0.95), rgba(26, 26, 46, 0.85));
-            }
-
-            [data-theme="dark"] .feature,
-            [data-theme="dark"] .panel,
-            [data-theme="dark"] .diagnosis-panel,
-            [data-theme="dark"] .login-panel,
-            [data-theme="dark"] .user-dashboard {
-                background: var(--color-surface);
-                border-color: var(--color-border);
-            }
-
-            [data-theme="dark"] input,
-            [data-theme="dark"] select,
-            [data-theme="dark"] textarea {
-                background: rgba(45, 43, 66, 0.5);
-                border-color: rgba(167, 139, 250, 0.3);
-                color: var(--color-secondary);
-            }
-
-            [data-theme="dark"] .emergency-btn {
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            }
-
-            [data-theme="dark"] .timeline__item {
-                background: rgba(167, 139, 250, 0.08);
-                border-color: rgba(167, 139, 250, 0.15);
-            }
-        `;
-        document.head.appendChild(style);
-    };
-
-    const hideLoader = () => {
-        if (!body.classList.contains("loading")) return;
-        body.classList.remove("loading");
-        preloader?.classList.add("preloader--hidden");
-        pages.forEach((page) => page.classList.add("is-visible"));
-    };
-
-    window.addEventListener("load", () => {
-        setTimeout(hideLoader, 450);
-    });
-
-    setTimeout(hideLoader, 2500);
-
-    // تطبيق تأثيرات الحركة على جميع الأزرار
-    const applyButtonAnimations = () => {
-        const buttons = document.querySelectorAll(`
-            button:not(.nav-toggle):not(.accordion-toggle),
-            .btn,
-            [class*="btn-"],
-            .emergency-btn,
-            .btn-login,
-            .btn-logout,
-            dialog button,
-            input[type="submit"],
-            input[type="button"]
-        `);
-        
-        buttons.forEach(button => {
-            if (!button.classList.contains('btn-animate')) {
-                button.classList.add('btn-animate');
-            }
-        });
-        
-        if (navToggle) {
-            navToggle.classList.add('btn-animate');
-        }
-        
-        document.querySelectorAll('.accordion-toggle').forEach(toggle => {
-            toggle.classList.add('btn-animate');
-        });
-        
-        console.log(`تم تطبيق تأثيرات الحركة على ${buttons.length} زر`);
-    };
-
-    if (navToggle) {
-        navToggle.addEventListener("click", () => {
-            const expanded = navToggle.getAttribute("aria-expanded") === "true";
-            navToggle.setAttribute("aria-expanded", String(!expanded));
-            mobileMenu.hidden = expanded;
-        });
-    }
-
-    mobileMenu?.querySelectorAll("a").forEach((link) => {
-        link.addEventListener("click", () => {
-            navToggle?.setAttribute("aria-expanded", "false");
-            mobileMenu.hidden = true;
-        });
-    });
-
-    // وظائف تسجيل الدخول والنوافذ المنبثقة
-    const openLoginModal = () => {
-        loginModal?.showModal();
-    };
-
-    const closeLoginModalFunc = () => {
-        loginModal?.close();
-    };
-
-    const openSuccessModal = () => {
-        successModal?.showModal();
-    };
-
-    const closeSuccessModalFunc = () => {
-        successModal?.close();
-    };
-
-    loginBtn?.addEventListener("click", openLoginModal);
-    mobileLoginBtn?.addEventListener("click", openLoginModal);
-    closeLoginModal?.addEventListener("click", closeLoginModalFunc);
-    closeSuccessModal?.addEventListener("click", closeSuccessModalFunc);
-    continueBtn?.addEventListener("click", closeSuccessModalFunc);
-
-    loginModal?.addEventListener("click", (e) => {
-        const dialogDimensions = loginModal.getBoundingClientRect();
-        if (
-            e.clientX < dialogDimensions.left ||
-            e.clientX > dialogDimensions.right ||
-            e.clientY < dialogDimensions.top ||
-            e.clientY > dialogDimensions.bottom
-        ) {
-            closeLoginModalFunc();
-        }
-    });
-
-    successModal?.addEventListener("click", (e) => {
-        const dialogDimensions = successModal.getBoundingClientRect();
-        if (
-            e.clientX < dialogDimensions.left ||
-            e.clientX > dialogDimensions.right ||
-            e.clientY < dialogDimensions.top ||
-            e.clientY > dialogDimensions.bottom
-        ) {
-            closeSuccessModalFunc();
-        }
-    });
-
-    // Vital signs logic
-    const evaluateStatus = (value, type) => {
-        switch (type) {
-            case "bp": {
-                const [systolic, diastolic] = value;
-                if (systolic > 140 || diastolic > 90) return { text: "مرتفع", color: "#b91c1c", bg: "rgba(239, 68, 68, 0.18)" };
-                if (systolic < 90 || diastolic < 60) return { text: "منخفض", color: "#0369a1", bg: "rgba(14, 165, 233, 0.18)" };
-                return { text: "طبيعي", color: "#047857", bg: "rgba(34, 197, 94, 0.16)" };
-            }
-            case "glucose":
-                if (value > 140) return { text: "مرتفع", color: "#b91c1c", bg: "rgba(239, 68, 68, 0.18)" };
-                if (value < 70) return { text: "منخفض", color: "#0369a1", bg: "rgba(14, 165, 233, 0.18)" };
-                return { text: "طبيعي", color: "#047857", bg: "rgba(34, 197, 94, 0.16)" };
-            case "pulse":
-                if (value > 100) return { text: "مرتفع", color: "#b91c1c", bg: "rgba(239, 68, 68, 0.18)" };
-                if (value < 60) return { text: "منخفض", color: "#0369a1", bg: "rgba(14, 165, 233, 0.18)" };
-                return { text: "طبيعي", color: "#047857", bg: "rgba(34, 197, 94, 0.16)" };
-            default:
-                return { text: "غير معروف", color: "#0f172a", bg: "rgba(148, 163, 184, 0.2)" };
-        }
-    };
-
-    const setChipStatus = (chip, status) => {
-        chip.textContent = status.text;
-        chip.style.color = status.color;
-        chip.style.backgroundColor = status.bg;
-    };
-
-    // Accordion
-    document.querySelectorAll(".accordion-toggle").forEach((toggle) => {
-        toggle.addEventListener("click", () => {
-            const expanded = toggle.getAttribute("aria-expanded") === "true";
-            toggle.setAttribute("aria-expanded", String(!expanded));
-            const panel = document.getElementById(toggle.getAttribute("aria-controls"));
-            if (panel) {
-                panel.hidden = expanded;
-            }
-        });
-    });
-
-    // Restore timeline from storage if available
-    const storedTimeline = JSON.parse(localStorage.getItem("timelineEntries") || "[]");
-    if (storedTimeline.length && timeline) {
-        timeline.innerHTML = "";
-        storedTimeline.forEach((entry) => {
-            const li = document.createElement("li");
-            li.className = "timeline__item";
-            li.textContent = entry;
-            timeline.appendChild(li);
-        });
-    }
-
-    const saveTimeline = () => {
-        if (!timeline) return;
-        const items = Array.from(timeline.querySelectorAll(".timeline__item")).map((item) => item.textContent);
-        localStorage.setItem("timelineEntries", JSON.stringify(items.slice(0, 6)));
-    };
-
-    const observer = new MutationObserver(saveTimeline);
-    if (timeline) {
-        observer.observe(timeline, { childList: true });
-    }
-
-    // نظام تسجيل الدخول المتكامل
-    const users = [
-        { email: 'user@example.com', password: '123456', name: 'أحمد محمد' },
-        { email: 'test@test.com', password: 'test123', name: 'سارة أحمد' },
-        { email: 'doctor@clinic.com', password: 'doctor123', name: 'د. محمد علي' }
-    ];
-
-    const validateEmail = (email) => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    };
-
-    const validatePassword = (password) => {
-        return password.length >= 6;
-    };
-
-    const showMessage = (message, type = 'error') => {
-        if (!loginMessage) return;
-        
-        loginMessage.innerHTML = '';
-        loginMessage.className = `message message--${type}`;
-        
-        const messageContent = document.createElement('div');
-        messageContent.innerHTML = `
-            <span class="message__icon">${type === 'success' ? '✅' : '⚠️'}</span>
-            <span class="message__text">${message}</span>
-        `;
-        
-        loginMessage.appendChild(messageContent);
-        loginMessage.style.display = 'block';
-
-        if (type === 'success') {
-            setTimeout(() => {
-                loginMessage.style.display = 'none';
-            }, 5000);
-        }
-    };
-
-    const showLoading = (show = true) => {
-        const submitBtn = loginForm?.querySelector('button[type="submit"]');
-        if (!submitBtn) return;
-
-        if (show) {
-            submitBtn.innerHTML = `
-                <div class="loading-spinner"></div>
-                جاري تسجيل الدخول...
-            `;
-            submitBtn.disabled = true;
-        } else {
-            submitBtn.innerHTML = 'تسجيل الدخول';
-            submitBtn.disabled = false;
-        }
-    };
-
-    const updateAuthUI = (user = null) => {
-        if (user) {
-            if (loginSection) loginSection.style.display = 'none';
-            if (userSection) userSection.style.display = 'block';
-            if (userName) userName.textContent = user.name;
-            if (userEmail) userEmail.textContent = user.email;
-            
-            const authHTML = `
-                <div class="user-nav">
-                    <span class="user-greeting">مرحباً، ${user.name}</span>
-                    <button class="btn-logout btn-animate" id="navLogoutBtn">تسجيل الخروج</button>
-                </div>
-            `;
-            
-            if (authSection) authSection.innerHTML = authHTML;
-            if (mobileAuthSection) mobileAuthSection.innerHTML = authHTML;
-            
-            document.getElementById('navLogoutBtn')?.addEventListener('click', handleLogout);
-            
-        } else {
-            if (loginSection) loginSection.style.display = 'block';
-            if (userSection) userSection.style.display = 'none';
-            
-            const authHTML = `
-                <a href="#loginSection" class="btn-login btn-animate">تسجيل الدخول</a>
-            `;
-            
-            if (authSection) authSection.innerHTML = authHTML;
-            if (mobileAuthSection) mobileAuthSection.innerHTML = authHTML;
-            
-            document.querySelectorAll('.btn-login').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    document.getElementById('loginSection').scrollIntoView({ 
-                        behavior: 'smooth' 
-                    });
-                });
-            });
-        }
-        
-        updateMobileSidebarUser();
-        setTimeout(applyButtonAnimations, 100);
-    };
-
-    const saveUserSession = (user, rememberMe) => {
-        const sessionData = {
-            email: user.email,
-            name: user.name,
-            loggedIn: true,
-            timestamp: new Date().toISOString()
-        };
-        
-        if (rememberMe) {
-            localStorage.setItem('userSession', JSON.stringify(sessionData));
-        } else {
-            sessionStorage.setItem('userSession', JSON.stringify(sessionData));
-        }
-    };
-
-    const allowAnyLogin = (email, password) => {
-        if (email.includes('@') && password.length >= 6) {
-            const user = {
-                email: email,
-                name: email.split('@')[0],
-                loggedIn: true
-            };
-            
-            const rememberMe = document.getElementById("rememberMe")?.checked || false;
-            saveUserSession(user, rememberMe);
-            updateAuthUI(user);
-            closeLoginModalFunc();
-            setTimeout(() => {
-                openSuccessModal();
-            }, 300);
-            return true;
-        }
-        return false;
-    };
-
-    const handleLogin = async (email, password, rememberMe) => {
-        showLoading(true);
-
-        try {
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            
-            const user = users.find(u => u.email === email && u.password === password);
-            
-            if (user) {
-                showMessage(`مرحباً بعودتك، ${user.name}!`, 'success');
-                saveUserSession(user, rememberMe);
-                updateAuthUI(user);
-                closeLoginModalFunc();
-                setTimeout(() => {
-                    openSuccessModal();
-                }, 300);
-            } else if (allowAnyLogin(email, password)) {
-                showMessage('تم تسجيل الدخول بنجاح!', 'success');
-            } else {
-                showMessage('يرجى إدخال بريد إلكتروني صحيح وكلمة مرور 6 أحرف على الأقل');
-                
-                const emailInput = document.getElementById('email');
-                const passwordInput = document.getElementById('password');
-                
-                if (emailInput && passwordInput) {
-                    emailInput.style.animation = 'shake 0.5s ease';
-                    passwordInput.style.animation = 'shake 0.5s ease';
-                    
-                    setTimeout(() => {
-                        emailInput.style.animation = '';
-                        passwordInput.style.animation = '';
-                    }, 500);
-                }
             }
             
-        } catch (error) {
-            showMessage('حدث خطأ في الاتصال. يرجى المحاولة مرة أخرى');
-        } finally {
-            showLoading(false);
-        }
-    };
-
-    const handleLogout = () => {
-        localStorage.removeItem('userSession');
-        sessionStorage.removeItem('userSession');
-        updateAuthUI(null);
-        showMessage('تم تسجيل الخروج بنجاح', 'success');
-        
-        setTimeout(() => {
-            window.location.href = 'index.html';
-        }, 500);
-    };
-
-    const checkExistingSession = () => {
-        const sessionData = localStorage.getItem('userSession') || sessionStorage.getItem('userSession');
-        
-        if (sessionData) {
-            try {
-                const user = JSON.parse(sessionData);
-                if (user.loggedIn) {
-                    updateAuthUI(user);
-                    return;
-                }
-            } catch (e) {
-                console.error('خطأ في تحليل جلسة المستخدم:', e);
+            .bubble {
+                max-width: 90%;
             }
         }
-        
-        updateAuthUI(null);
-    };
 
-    loginForm?.addEventListener("submit", (event) => {
-        event.preventDefault();
-        
-        const email = document.getElementById("email")?.value.trim();
-        const password = document.getElementById("password")?.value;
-        const rememberMe = document.getElementById("rememberMe")?.checked || false;
-
-        if (!validateEmail(email)) {
-            showMessage('يرجى إدخال بريد إلكتروني صحيح');
-            return;
-        }
-
-        if (!validatePassword(password)) {
-            showMessage('كلمة المرور يجب أن تكون على الأقل 6 أحرف');
-            return;
-        }
-
-        handleLogin(email, password, rememberMe);
-    });
-
-    logoutBtn?.addEventListener('click', handleLogout);
-
-    const addInputEffects = () => {
-        const inputs = document.querySelectorAll('input[type="email"], input[type="password"]');
-        
-        inputs.forEach(input => {
-            input.addEventListener('focus', function() {
-                this.parentElement?.classList.add('focused');
-            });
-            
-            input.addEventListener('blur', function() {
-                if (!this.value) {
-                    this.parentElement?.classList.remove('focused');
-                }
-            });
-            
-            input.addEventListener('input', function() {
-                if (this.type === 'email' && this.value) {
-                    if (validateEmail(this.value)) {
-                        this.style.borderColor = '#22c55e';
-                    } else {
-                        this.style.borderColor = '#ef4444';
-                    }
-                }
-            });
-        });
-    };
-
-    const addDashboardSidebarStyles = () => {
-        if (document.getElementById('dashboard-sidebar-styles')) return;
-        
-        const style = document.createElement('style');
-        style.id = 'dashboard-sidebar-styles';
-        style.textContent = `
-            .dashboard-sidebar {
-                position: fixed;
-                top: 0;
-                right: -100%;
-                width: 85%;
-                max-width: 320px;
-                height: 100%;
-                background: white;
-                z-index: 10000;
-                transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                box-shadow: -5px 0 25px rgba(0, 0, 0, 0.15);
-                display: flex;
+        @media (max-width: 576px) {
+            .input-form {
                 flex-direction: column;
             }
             
-            .dashboard-sidebar.active {
-                right: 0;
+            .input-form button {
+                width: 100%;
             }
             
-            .dashboard-sidebar__overlay {
-                position: fixed;
-                top: 0;
-                right: 0;
-                bottom: 0;
-                left: 0;
-                background: rgba(0, 0, 0, 0.5);
-                z-index: 9999;
-                opacity: 0;
-                visibility: hidden;
-                transition: all 0.3s ease;
-            }
-            
-            .dashboard-sidebar__overlay.active {
-                opacity: 1;
-                visibility: visible;
-            }
-            
-            .dashboard-sidebar__content {
-                flex: 1;
-                display: flex;
+            .top-nav ul {
                 flex-direction: column;
-                overflow-y: auto;
             }
             
-            .dashboard-sidebar__header {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 1.5rem 1rem;
-                background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-                color: white;
-            }
-            
-            .dashboard-sidebar__logo {
-                display: flex;
-                align-items: center;
-                gap: 0.5rem;
-                font-weight: 700;
-                font-size: 1.2rem;
-            }
-            
-            .dashboard-sidebar__close {
-                background: none;
-                border: none;
-                color: white;
-                font-size: 1.5rem;
-                cursor: pointer;
-                padding: 0.5rem;
-                border-radius: 50%;
-                transition: background 0.3s;
-            }
-            
-            .dashboard-sidebar__close:hover {
-                background: rgba(255, 255, 255, 0.2);
-            }
-            
-            .dashboard-sidebar__nav {
-                flex: 1;
-                padding: 1rem 0;
-            }
-            
-            .dashboard-sidebar__link {
-                display: flex;
-                align-items: center;
-                gap: 1rem;
-                padding: 1rem 1.5rem;
-                text-decoration: none;
-                color: #212529;
-                transition: all 0.3s;
-                border-right: 3px solid transparent;
-            }
-            
-            .dashboard-sidebar__link:hover,
-            .dashboard-sidebar__link.active {
-                background: rgba(139, 92, 246, 0.1);
-                color: #8b5cf6;
-                border-right-color: #8b5cf6;
-            }
-            
-            .dashboard-sidebar__link i {
-                width: 20px;
-                text-align: center;
-            }
-            
-            .dashboard-sidebar__user {
-                padding: 1.5rem;
-                border-top: 1px solid #eee;
-                margin-top: auto;
-            }
-            
-            .dashboard-sidebar__user-info {
-                display: flex;
-                align-items: center;
-                gap: 0.75rem;
-                margin-bottom: 1rem;
-            }
-            
-            .dashboard-sidebar__user-avatar {
-                width: 50px;
-                height: 50px;
-                border-radius: 50%;
-                background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-                display: flex;
-                align-items: center;
+            .top-nav a {
+                width: 100%;
                 justify-content: center;
-                color: white;
-                font-weight: 700;
-                font-size: 1.2rem;
             }
-            
-            .dashboard-sidebar__user-details {
-                flex: 1;
-            }
-            
-            .dashboard-sidebar__user-name {
-                font-weight: 700;
-                margin-bottom: 0.25rem;
-            }
-            
-            .dashboard-sidebar__user-email {
-                font-size: 0.85rem;
-                color: #6c757d;
-            }
-            
-            .dashboard-sidebar__actions {
-                display: flex;
-                flex-direction: column;
-                gap: 0.5rem;
-            }
-            
-            .dashboard-sidebar__action-btn {
-                display: flex;
-                align-items: center;
-                gap: 0.75rem;
-                padding: 0.75rem 1rem;
-                background: none;
-                border: 1px solid #eee;
-                border-radius: 12px;
-                cursor: pointer;
-                transition: all 0.3s;
-                font-family: inherit;
-                font-size: 0.9rem;
-                color: #212529;
-            }
-            
-            .dashboard-sidebar__action-btn:hover {
-                background: rgba(139, 92, 246, 0.1);
-                border-color: #8b5cf6;
-                color: #8b5cf6;
-            }
-            
-            .dashboard-sidebar__action-btn.logout {
-                color: #dc2626;
-                border-color: rgba(220, 38, 38, 0.3);
-            }
-            
-            .dashboard-sidebar__action-btn.logout:hover {
-                background: rgba(220, 38, 38, 0.1);
-            }
-            
-            @media (max-width: 480px) {
-                .dashboard-sidebar {
-                    width: 90%;
-                }
-            }
-            
-            @media (min-width: 769px) {
-                .dashboard-sidebar,
-                .dashboard-sidebar__overlay {
-                    display: none !important;
-                }
-            }
-
-            @keyframes shake {
-                0%, 100% { transform: translateX(0); }
-                25% { transform: translateX(-5px); }
-                75% { transform: translateX(5px); }
-            }
-        `;
-        document.head.appendChild(style);
-    };
-
-    const createDashboardSidebar = () => {
-        if (document.getElementById('dashboardSidebar')) return;
-        
-        addDashboardSidebarStyles();
-        
-        const sidebar = document.createElement('div');
-        sidebar.id = 'dashboardSidebar';
-        sidebar.className = 'dashboard-sidebar';
-        sidebar.innerHTML = `
-            <div class="dashboard-sidebar__overlay" id="dashboardSidebarOverlay"></div>
-            <div class="dashboard-sidebar__content">
-                <div class="dashboard-sidebar__header">
-                    <div class="dashboard-sidebar__logo">
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-page-wrapper">
+        <div class="chat-container">
+            <!-- الهيدر العلوي -->
+            <div class="chat-header">
+                <div class="header-right">
+                    <h1>
                         <i class="fas fa-stethoscope"></i>
                         <span>IDOS</span>
-                    </div>
-                    <button class="dashboard-sidebar__close" id="dashboardSidebarClose">
-                        <i class="fas fa-times"></i>
-                    </button>
+                    </h1>
+                    
+                    <!-- القائمة العلوية -->
+                    <nav class="top-nav">
+                        <ul>
+                            <li><a href="index.html"><i class="fas fa-home"></i> الرئيسية</a></li>
+                            <li><a href="diagnosis.html"><i class="fas fa-diagnoses"></i> التشخيص</a></li>
+                            <li><a href="chat.html" class="active"><i class="fas fa-comments"></i> المحادثة</a></li>
+                            <li><a href="hospitals.html"><i class="fas fa-hospital"></i> المستشفيات</a></li>
+                            <li><a href="settings.html"><i class="fas fa-cog"></i> الإعدادات</a></li>
+                        </ul>
+                    </nav>
                 </div>
-                <nav class="dashboard-sidebar__nav">
-                    <a href="index.html" class="dashboard-sidebar__link">
-                        <i class="fas fa-home"></i>
-                        <span>الرئيسية</span>
-                    </a>
-                    <a href="diagnosis.html" class="dashboard-sidebar__link">
-                        <i class="fas fa-diagnoses"></i>
-                        <span>التشخيص</span>
-                    </a>
-                    <a href="chat.html" class="dashboard-sidebar__link">
-                        <i class="fas fa-comments"></i>
-                        <span>محادثة</span>
-                    </a>
-                    <a href="hospitals.html" class="dashboard-sidebar__link">
-                        <i class="fas fa-hospital"></i>
-                        <span>المستشفيات</span>
-                    </a>
-                    <a href="settings.html" class="dashboard-sidebar__link">
-                        <i class="fas fa-cog"></i>
-                        <span>الإعدادات</span>
-                    </a>
-                    <div class="dashboard-sidebar__user" id="dashboardSidebarUser"></div>
-                </nav>
             </div>
-        `;
-        
-        document.body.appendChild(sidebar);
-        setupDashboardSidebarEvents();
-    };
-    
-    const setupDashboardSidebarEvents = () => {
-        const sidebar = document.getElementById('dashboardSidebar');
-        const overlay = document.getElementById('dashboardSidebarOverlay');
-        const closeBtn = document.getElementById('dashboardSidebarClose');
-        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-        
-        if (mobileMenuBtn) {
-            mobileMenuBtn.addEventListener('click', openDashboardSidebar);
-        }
-        
-        if (closeBtn) {
-            closeBtn.addEventListener('click', closeDashboardSidebar);
-        }
-        
-        if (overlay) {
-            overlay.addEventListener('click', closeDashboardSidebar);
-        }
-        
-        document.querySelectorAll('.dashboard-sidebar__link').forEach(link => {
-            link.addEventListener('click', closeDashboardSidebar);
-        });
-        
-        updateDashboardSidebarUser();
-    };
-    
-    const openDashboardSidebar = () => {
-        const sidebar = document.getElementById('dashboardSidebar');
-        const overlay = document.getElementById('dashboardSidebarOverlay');
-        
-        if (sidebar && overlay) {
-            sidebar.classList.add('active');
-            overlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-    };
-    
-    const closeDashboardSidebar = () => {
-        const sidebar = document.getElementById('dashboardSidebar');
-        const overlay = document.getElementById('dashboardSidebarOverlay');
-        
-        if (sidebar && overlay) {
-            sidebar.classList.remove('active');
-            overlay.classList.remove('active');
-            document.body.style.overflow = '';
-        }
-    };
-    
-    const updateDashboardSidebarUser = () => {
-        const userSection = document.getElementById('dashboardSidebarUser');
-        if (!userSection) return;
-        
-        const userSession = localStorage.getItem('userSession') || sessionStorage.getItem('userSession');
-        
-        if (userSession) {
-            try {
-                const userData = JSON.parse(userSession);
-                userSection.innerHTML = `
-                    <div class="dashboard-sidebar__user-info">
-                        <div class="dashboard-sidebar__user-avatar">${userData.name ? userData.name.charAt(0) : 'م'}</div>
-                        <div class="dashboard-sidebar__user-details">
-                            <div class="dashboard-sidebar__user-name">${userData.name || 'مستخدم'}</div>
-                            <div class="dashboard-sidebar__user-email">${userData.email || ''}</div>
-                        </div>
-                    </div>
-                    <div class="dashboard-sidebar__actions">
-                        <button class="dashboard-sidebar__action-btn" onclick="window.location.href='settings.html'">
-                            <i class="fas fa-user-cog"></i>
-                            <span>إعدادات الحساب</span>
+
+            <!-- صندوق المحادثة -->
+            <div class="chat-main">
+                <div class="chat-window" id="chatWindow"></div>
+
+                <div class="chat-footer">
+                    <form class="input-form" id="chatForm">
+                        <input type="text" id="chatInput" placeholder="اسألني أي سؤال طبي..." autocomplete="off">
+                        <button type="submit">
+                            <span>إرسال</span> <i class="fas fa-paper-plane"></i>
                         </button>
-                        <button class="dashboard-sidebar__action-btn logout" id="dashboardSidebarLogout">
-                            <i class="fas fa-sign-out-alt"></i>
-                            <span>تسجيل الخروج</span>
+                        <button type="button" class="clear-btn" id="clearChatBtn" title="مسح المحادثة">
+                            <i class="fas fa-eraser"></i>
                         </button>
-                    </div>
-                `;
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // قاعدة البيانات
+        // ============================================
+        (function() {
+            if (typeof Dexie !== 'undefined' && !window.idosDB) {
+                const db = new Dexie('IDOSHealthDB');
                 
-                document.getElementById('dashboardSidebarLogout')?.addEventListener('click', () => {
-                    localStorage.removeItem('userSession');
-                    sessionStorage.removeItem('userSession');
-                    closeDashboardSidebar();
-                    setTimeout(() => {
-                        window.location.href = 'login.html';
-                    }, 300);
+                db.version(1).stores({
+                    diagnosisHistory: '++id, disease, department, timestamp, symptoms, advice',
+                    chatHistory: '++id, author, message, timestamp',
+                    userSettings: '++id, key, value',
+                    userSessions: '++id, email, name, timestamp, isActive',
+                    favoriteHospitals: '++id, hospitalId, name, location, addedAt',
+                    vitalSigns: '++id, type, value, status, timestamp'
                 });
                 
-            } catch (e) {
-                console.error('خطأ في تحليل بيانات المستخدم:', e);
-                userSection.innerHTML = `
-                    <div class="dashboard-sidebar__actions">
-                        <button class="dashboard-sidebar__action-btn" onclick="window.location.href='login.html'">
-                            <i class="fas fa-sign-in-alt"></i>
-                            <span>تسجيل الدخول</span>
-                        </button>
+                db.open().catch(err => {
+                    console.error('❌ فشل في فتح قاعدة البيانات:', err);
+                });
+                
+                window.idosDB = db;
+                
+                window.idosDB.chat = {
+                    async add(message) {
+                        try {
+                            return await db.chatHistory.add({
+                                ...message,
+                                timestamp: message.timestamp || new Date().toISOString()
+                            });
+                        } catch (error) {
+                            console.error('❌ خطأ في حفظ الرسالة:', error);
+                            throw error;
+                        }
+                    },
+                    
+                    async getHistory(limit = 50) {
+                        try {
+                            return await db.chatHistory
+                                .orderBy('timestamp')
+                                .limit(limit)
+                                .toArray();
+                        } catch (error) {
+                            console.error('❌ خطأ في استرجاع المحادثات:', error);
+                            return [];
+                        }
+                    },
+                    
+                    async clear() {
+                        return await db.chatHistory.clear();
+                    }
+                };
+            }
+            
+            console.log('✅ قاعدة البيانات جاهزة');
+        })();
+
+        // ============================================
+        // نظام الإجابات الذكية الموسع
+        // ============================================
+        (function() {
+            // عناصر DOM
+            const chatWindow = document.getElementById('chatWindow');
+            const chatForm = document.getElementById('chatForm');
+            const chatInput = document.getElementById('chatInput');
+            const clearBtn = document.getElementById('clearChatBtn');
+            
+            const STORAGE_KEY = 'medical_ai_chat';
+
+            // ============================================
+            // قاعدة معرفة شاملة جداً
+            // ============================================
+            
+            // 1. الأمراض الشائعة والحالات الطبية
+            const commonDiseases = [
+                {
+                    keywords: ['برد', 'زكام', 'رشح', 'نزلة', 'انفلونزا', 'انفلونزا'],
+                    reply: '🤧 **الزكام والإنفلونزا**:\n• أعراض: عطس، سعال، احتقان أنف، صداع، حمى خفيفة\n• العلاج: راحة، سوائل دافئة، مسكنات بسيطة\n• متى تزور الطبيب: إذا استمرت الحرارة أكثر من 3 أيام أو صاحبها ضيق تنفس'
+                },
+                {
+                    keywords: ['كورونا', 'كوفيد', 'covid', 'فيروس كورونا'],
+                    reply: '🦠 **كوفيد-19 (كورونا)**:\n• الأعراض الشائعة: حمى، سعال جاف، تعب، فقدان حاسة الشم/التذوق\n• الوقاية: ارتداء الكمامة، التباعد الاجتماعي، غسل اليدين\n• متى تزور الطوارئ: صعوبة التنفس، ألم مستمر في الصدر'
+                },
+                {
+                    keywords: ['سكر', 'السكري', 'مرض السكر', 'جلوكوز', 'انسولين'],
+                    reply: '💉 **مرض السكري**:\n• الأعراض: عطش شديد، تبول متكرر، جوع دائم، فقدان وزن\n• النوع الأول: يحتاج أنسولين يومياً\n• النوع الثاني: يمكن السيطرة بالحمية والأدوية\n• نصائح: قياس السكر دورياً، اتباع نظام غذائي صحي'
+                },
+                {
+                    keywords: ['ضغط', 'ارتفاع الضغط', 'ضغط الدم', 'hypertension'],
+                    reply: '🩺 **ارتفاع ضغط الدم**:\n• القراءة الطبيعية: أقل من 120/80\n• مرتفع: أكثر من 140/90\n• نصائح: تقليل الملح، ممارسة الرياضة، تجنب التوتر\n• العلاج: أدوية حسب وصف الطبيب'
+                },
+                {
+                    keywords: ['قلب', 'القلب', 'نوبة قلبية', 'ذبحة', 'ألم صدر'],
+                    reply: '❤️ **أمراض القلب**:\n• أعراض النوبة القلبية: ألم شديد بالصدر، ضيق تنفس، تعرق، غثيان\n• عوامل الخطورة: التدخين، السمنة، الضغط المرتفع\n• وقاية: فحص دوري، غذاء صحي، رياضة\n• طوارئ: اتصل بالإسعاف فوراً (123)'
+                }
+            ];
+
+            // 2. الأعراض الشائعة
+            const symptoms = [
+                {
+                    keywords: ['صداع', 'وجع راس', 'ألم الرأس', 'راسي يوجعني'],
+                    reply: '🤕 **الصداع**:\n• أسباب شائعة: إجهاد، جفاف، قلة نوم، إجهاد العينين\n• علاج منزلي: شرب ماء، راحة في غرفة مظلمة، كمادات باردة\n• أنواع: صداع نصفي، صداع توتري، صداع عنقودي\n• للطوارئ: إذا كان مفاجئاً وشديداً جداً'
+                },
+                {
+                    keywords: ['حمى', 'حرارة', 'سخونة', 'ارتفاع حرارة'],
+                    reply: '🌡️ **الحمى (ارتفاع الحرارة)**:\n• درجة الحرارة الطبيعية: 36.5-37.5 مئوي\n• حمى خفيفة: 37.5-38.5 (راحة وسوائل)\n• حمى متوسطة: 38.5-39.5 (خافض حرارة)\n• مراجعة الطبيب: إذا استمرت أكثر من يومين أو تجاوزت 39.5'
+                },
+                {
+                    keywords: ['كحة', 'سعال', 'كحه', 'كخه'],
+                    reply: '🌬️ **السعال**:\n• أنواع: كحة جافة، كحة مع بلغم\n• أسباب: حساسية، برد، التهاب شعبي، ارتجاع معدي\n• علاج: سوائل دافئة، عسل، بخار\n• إذا صاحبها: ضيق تنفس أو دم، توجه للطوارئ'
+                },
+                {
+                    keywords: ['بطن', 'مغص', 'وجع بطن', 'الم في البطن', 'معدة'],
+                    reply: '🩻 **آلام البطن**:\n• أسباب شائعة: عسر هضم، غازات، إمساك، برد\n• علاج: شرب نعناع، كمادات دافئة، راحة\n• للطوارئ: ألم حاد مفاجئ، قيء دموي، انتفاخ شديد'
+                },
+                {
+                    keywords: ['اسهال', 'إسهال', 'ترجيع', 'قيء', 'غثيان'],
+                    reply: '🤢 **الإسهال والقيء**:\n• الأسباب: عدوى فيروسية، تسمم غذائي، توتر\n• علاج: محلول معالجة جفاف، سوائل، راحة للمعدة\n• استشر طبيب: إذا استمر أكثر من يومين أو صاحبه حمى عالية'
+                },
+                {
+                    keywords: ['دوخة', 'دوار', 'عدم اتزان', 'دائخ'],
+                    reply: '🌀 **الدوخة والدوار**:\n• أسباب: انخفاض الضغط، فقر دم، جفاف، قلة نوم\n• إسعافات: اجلس فوراً، اشرب ماء، تناول شيئاً حلواً\n• للطبيب: إذا تكررت أو صاحبتها أعراض عصبية'
+                }
+            ];
+
+            // 3. الأمراض المزمنة
+            const chronicDiseases = [
+                {
+                    keywords: ['روماتيزم', 'التهاب مفاصل', 'arthritis', 'روماتويد'],
+                    reply: '🦴 **التهاب المفاصل الروماتويدي**:\n• أعراض: ألم وتورم المفاصل، تيبس الصباح\n• علاج: أدوية مضادة للالتهاب، علاج طبيعي\n• نصائح: كمادات دافئة، راحة، تمارين خفيفة'
+                },
+                {
+                    keywords: ['ربو', 'حساسية صدر', 'asma', 'ضيق تنفس'],
+                    reply: '🌬️ **الربو**:\n• أعراض: ضيق تنفس، كحة، صفير بالصدر\n• مثيرات: غبار، دخان، روائح قوية، برد\n• علاج: بخاخات موسعة للشعب، تجنب المثيرات'
+                },
+                {
+                    keywords: ['صدفية', 'psoriasis', 'جلد', 'بقع حمراء'],
+                    reply: '🧴 **الصدفية**:\n• أعراض: بقع حمراء مع قشور فضية، حكة\n• علاج: كريمات موضعية، علاج ضوئي\n• نصائح: ترطيب الجلد، تجنب التوتر'
+                }
+            ];
+
+            // 4. صحة المرأة
+            const womensHealth = [
+                {
+                    keywords: ['دورة', 'حيض', 'شهرية', 'period', 'طمث'],
+                    reply: '🌸 **الدورة الشهرية**:\n• المدة الطبيعية: 3-7 أيام\n• الدورة الطبيعية: 21-35 يوماً\n• تخفيف الألم: كمادات دافئة، راحة، مسكنات\n• استشارة طبيب: ألم شديد، نزيف غزير، عدم انتظام'
+                },
+                {
+                    keywords: ['حمل', 'pregnancy', 'حامل', 'ولادة'],
+                    reply: '🤰 **الحمل**:\n• علامات مبكرة: غثيان، تعب، انقطاع الدورة\n• فيتامينات: حمض فوليك، حديد، كالسيوم\n• مواعيد متابعة: زيارة شهرية للطبيب\n• طوارئ: نزيف، آلام شديدة'
+                }
+            ];
+
+            // 5. صحة الرضع والأطفال
+            const childHealth = [
+                {
+                    keywords: ['رضيع', 'طفل', 'baby', 'أطفال', 'طفلي'],
+                    reply: '👶 **صحة الأطفال**:\n• تطعيمات: ضرورية في مواعيدها\n• حمى الطفل: استشر طبيب إذا كان عمره أقل من 3 شهور\n• رضاعة: طبيعية أفضل حتى 6 شهور\n• طوارئ: تشنجات، صعوبة تنفس'
+                },
+                {
+                    keywords: ['تسنين', 'أسنان الطفل', 'اسنان', 'ضرس'],
+                    reply: '🦷 **التسنين**:\n• أعراض: بكاء، سيلان لعاب، احمرار لثة\n• مسكنات: عضاضة باردة، تدليك اللثة\n• متى تقلق: إذا صاحبتها حمى عالية'
+                }
+            ];
+
+            // 6. التغذية والحميات
+            const nutrition = [
+                {
+                    keywords: ['ريجيم', 'تخسيس', 'وزن', 'سمنة', 'حمية'],
+                    reply: '🥗 **نصائح غذائية**:\n• لإنقاص الوزن: قلل سعرات، أكثر من الخضار\n• وجبات متوازنة: بروتين، كربوهيدرات، دهون صحية\n• شرب الماء: 8 أكواب يومياً\n• تجنب: سكريات، أكل جاهز، مشروبات غازية'
+                },
+                {
+                    keywords: ['فيتامين', 'vitamin', 'نقص فيتامين'],
+                    reply: '💊 **الفيتامينات**:\n• فيتامين د: شمس 15 دقيقة يومياً\n• فيتامين سي: برتقال، ليمون، فلفل أخضر\n• الحديد: سبانخ، لحم أحمر، عدس\n• استشر طبيب قبل تناول مكملات'
+                }
+            ];
+
+            // 7. الصحة النفسية
+            const mentalHealth = [
+                {
+                    keywords: ['اكتئاب', 'حزن', 'ضيق', 'تعب نفسي', 'مشاعر'],
+                    reply: '🧠 **الصحة النفسية**:\n• أعراض الاكتئاب: حزن مستمر، فقدان متعة، تعب\n• مساعدة: تحدث مع شخص تثق به، ممارسة رياضة\n• متى تزور طبيب: إذا استمرت الأعراض أكثر من أسبوعين'
+                },
+                {
+                    keywords: ['قلق', 'توتر', 'stress', 'خوف', 'نرفزة'],
+                    reply: '😰 **القلق والتوتر**:\n• أعراض: خفقان، تعرق، أرق، صعوبة تركيز\n• تمارين تنفس: شهيق 4 ثوان، زفير 6 ثوان\n• تجنب: كافيين، سهر، تفكير زائد'
+                },
+                {
+                    keywords: ['أرق', 'نوم', 'لا أنام', 'sleep'],
+                    reply: '😴 **الأرق ومشاكل النوم**:\n• نصائح: روتين نوم ثابت، غرفة مظلمة، تجنب شاشات قبل النوم\n• تجنب: قهوة بعد العصر، أكل دسم قبل النوم\n• إذا استمر: استشر طبيب'
+                }
+            ];
+
+            // 8. الإسعافات الأولية والطوارئ
+            const firstAid = [
+                {
+                    keywords: ['اسعافات', 'طوارئ', 'emergency', 'حادث', 'جرح'],
+                    reply: '🚑 **إسعافات أولية**:\n• جرح: نظف بماء وصابون، ضع ضمادة\n• نزيف: اضغط على الجرح بقطعة قماش نظيفة\n• حروق: ماء بارد 15 دقيقة، لا تضع معجون أسنان\n• كسور: لا تحرك المصاب، اطلب إسعاف'
+                },
+                {
+                    keywords: ['حروق', 'حرق', 'burn'],
+                    reply: '🔥 **علاج الحروق**:\n• درجة أولى: احمرار (ماء بارد، كريم مرطب)\n• درجة ثانية: فقاعات (لا تفتحها، استشر طبيب)\n• درجة ثالثة: تفحم الجلد (اتصل بإسعاف فوراً)'
+                }
+            ];
+
+            // 9. الأدوية والعلاجات
+            const medications = [
+                {
+                    keywords: ['دواء', 'علاج', 'medicine', 'حبوب', 'أقراص'],
+                    reply: '💊 **استشارة دوائية**:\n• تناول الدواء بانتظام حسب وصف الطبيب\n• لا توقف دواء الضغط أو السكر بدون استشارة\n• احذر: تداخلات دوائية، أخبر طبيبك بكل أدويتك'
+                },
+                {
+                    keywords: ['مضاد حيوي', 'antibiotic', 'مضاد'],
+                    reply: '💊 **مضادات حيوية**:\n• لا تستخدمها بدون وصفة طبية\n• أكمل الجرعة كاملة حتى لو تحسنت\n• لا تفيد في الأمراض الفيروسية (برد، إنفلونزا)'
+                }
+            ];
+
+            // 10. استشارات عامة
+            const generalAdvice = [
+                {
+                    keywords: ['طبيب', 'عيادة', 'مستشفى', 'doctor', 'hospital'],
+                    reply: '🏥 **استشارات طبية**:\n• لمعرفة أقرب مستشفى: افتح صفحة "المستشفيات"\n• للحجز: يمكنك الاتصال بالعيادات مباشرة\n• طوارئ: اتصل على 123'
+                },
+                {
+                    keywords: ['تحليل', 'فحص', 'اختبار', 'تحاليل'],
+                    reply: '🔬 **التحاليل الطبية**:\n• صورة دم كاملة: تقييم عام للصحة\n• سكر صائم: لتشخيص السكري\n• وظائف كبد وكلى: لمتابعة أعضاء حيوية\n• استشر طبيب لتفسير النتائج'
+                },
+                {
+                    keywords: ['مرض', 'diagnosis', 'تشخيص', 'اعراض'],
+                    reply: '🔍 **تشخيص مبكر**:\n• لتحليل الأعراض بدقة، استخدم صفحة "التشخيص"\n• نصائح: لا تعتمد على التشخيص الذاتي فقط\n• استشر طبيب للحصول على تشخيص دقيق'
+                }
+            ];
+
+            // دمج جميع الفئات
+            const allResponses = [
+                ...commonDiseases,
+                ...symptoms,
+                ...chronicDiseases,
+                ...womensHealth,
+                ...childHealth,
+                ...nutrition,
+                ...mentalHealth,
+                ...firstAid,
+                ...medications,
+                ...generalAdvice
+            ];
+
+            // الردود الافتراضية للأسئلة غير الطبية
+            const fallbackResponses = [
+                "🩺 **أنا مساعد طبي** وأجيب عن الأسئلة الصحية فقط.\n\nيمكنك سؤالي عن:\n• أعراض أمراض\n• حالات صحية\n• أدوية وعلاجات\n• تغذية وصحة\n• إسعافات أولية\n• صحة نفسية",
+                
+                "💙 **كيف أساعدك طبياً؟**\n\nجرب أن تسأل عن:\n• صداع أو حمى\n• أعراض مرض معين\n• نصائح صحية\n• تغذية وريجيم\n• صحة أطفال\n• صحة المرأة",
+                
+                "🏥 **الأسئلة الطبية المتاحة**:\n• الأمراض الشائعة (برد، سكر، ضغط)\n• الأعراض (صداع، كحة، ألم)\n• التغذية والحميات\n• الصحة النفسية\n• الإسعافات الأولية\n• الأدوية والعلاجات"
+            ];
+
+            // دالة للبحث عن الإجابة المناسبة
+            function getMedicalReply(text) {
+                const lower = text.trim().toLowerCase();
+                
+                // البحث في قاعدة المعرفة
+                for (let entry of allResponses) {
+                    if (entry.keywords.some(keyword => lower.includes(keyword))) {
+                        return entry.reply;
+                    }
+                }
+                
+                // التحقق من وجود كلمات دالة أخرى
+                const medicalTerms = ['مرض', 'علاج', 'دواء', 'طبيب', 'مستشفى', 'اعراض', 'صحة', 'الم', 'وجع', 'حمى', 'كحة', 'ألم', 'مشكلة'];
+                if (medicalTerms.some(term => lower.includes(term))) {
+                    return "🔍 **لم أجد تطابقاً دقيقاً.**\n\nهل يمكنك توضيح سؤالك أكثر؟ مثال:\n• ما هي أعراض [المرض]؟\n• كيف أعالج [العرض]؟\n• نصائح لتحسين [الحالة]؟";
+                }
+                
+                // أسئلة الترحيب
+                if (lower.includes('السلام') || lower.includes('hello') || lower.includes('hi') || lower.includes('مرحبا')) {
+                    return "👋 **وعليكم السلام!**\nأنا مساعدك الطبي الذكي، كيف أستطيع مساعدتك اليوم؟\n\nيمكنك سؤالي عن أي عرض صحي أو حالة طبية.";
+                }
+                
+                // إذا لم يجد أي تطابق
+                return fallbackResponses[Math.floor(Math.random() * fallbackResponses.length)];
+            }
+
+            // دوال مساعدة
+            function getCurrentTime() {
+                return new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+            }
+
+            function appendMessage(role, content, save = true) {
+                const msgDiv = document.createElement('div');
+                msgDiv.className = `message ${role}`;
+                const formattedContent = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                msgDiv.innerHTML = `
+                    <div class="bubble">
+                        <p>${formattedContent.replace(/\n/g, '<br>')}</p>
+                        <span class="timestamp">${getCurrentTime()}</span>
                     </div>
                 `;
+                chatWindow.appendChild(msgDiv);
+                chatWindow.scrollTo({ top: chatWindow.scrollHeight, behavior: 'smooth' });
+                if (save) saveToStorage(role, content);
             }
-        } else {
-            userSection.innerHTML = `
-                <div class="dashboard-sidebar__actions">
-                    <button class="dashboard-sidebar__action-btn" onclick="window.location.href='login.html'">
-                        <i class="fas fa-sign-in-alt"></i>
-                        <span>تسجيل الدخول</span>
-                    </button>
-                </div>
-            `;
-        }
-    };
 
-    const updateMobileSidebarUser = () => {
-        // هذه الدالة ستستدعي updateDashboardSidebarUser
-        updateDashboardSidebarUser();
-    };
-
-    // نظام الإعدادات
-    const SettingsManager = {
-        defaultSettings: {
-            language: 'ar',
-            emailNotifications: true,
-            appNotifications: true,
-            dataCollection: true,
-            userActivity: false,
-            publicProfile: false,
-            performanceMode: false,
-            autoBackup: true,
-            autoUpdate: true,
-            theme: 'light'
-        },
-        
-        load: function() {
-            try {
-                const saved = localStorage.getItem('idos_settings');
-                return saved ? JSON.parse(saved) : {...this.defaultSettings};
-            } catch (e) {
-                console.error('خطأ في تحميل الإعدادات:', e);
-                return {...this.defaultSettings};
+            function showTypingIndicator() {
+                const indicator = document.createElement('div');
+                indicator.className = 'message ai';
+                indicator.id = 'typingIndicator';
+                indicator.innerHTML = `
+                    <div class="typing-indicator">
+                        <div class="typing-dots">
+                            <span></span><span></span><span></span>
+                        </div>
+                        <span class="typing-text">المساعد الطبي يكتب...</span>
+                    </div>
+                `;
+                chatWindow.appendChild(indicator);
+                chatWindow.scrollTo({ top: chatWindow.scrollHeight, behavior: 'smooth' });
             }
-        },
-        
-        save: function(settings) {
-            try {
-                localStorage.setItem('idos_settings', JSON.stringify(settings));
-                return true;
-            } catch (e) {
-                console.error('خطأ في حفظ الإعدادات:', e);
-                return false;
+
+            function hideTypingIndicator() {
+                const el = document.getElementById('typingIndicator');
+                if (el) el.remove();
             }
-        },
-        
-        apply: function() {
-            const settings = this.load();
-            document.documentElement.setAttribute('data-theme', settings.theme || 'light');
-            
-            if (settings.language === 'en') {
-                document.documentElement.dir = 'ltr';
-                document.documentElement.lang = 'en';
-            } else {
-                document.documentElement.dir = 'rtl';
-                document.documentElement.lang = 'ar';
+
+            function saveToStorage(role, text) {
+                try {
+                    const history = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+                    history.push({ role, text, time: getCurrentTime() });
+                    if (history.length > 60) history.shift();
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(history));
+                    
+                    if (window.idosDB && window.idosDB.chat) {
+                        window.idosDB.chat.add({
+                            author: role,
+                            message: text,
+                            timestamp: new Date().toISOString()
+                        }).catch(err => console.log('خطأ في حفظ المحادثة في Dexie:', err));
+                    }
+                } catch (e) {}
             }
-            
-            console.log('تم تطبيق الإعدادات:', settings);
-        },
-        
-        reset: function() {
-            this.save(this.defaultSettings);
-            this.apply();
-        },
-        
-        get: function(key) {
-            const settings = this.load();
-            return settings[key] !== undefined ? settings[key] : this.defaultSettings[key];
-        },
-        
-        update: function(key, value) {
-            const settings = this.load();
-            settings[key] = value;
-            this.save(settings);
-            this.apply();
-        },
-        
-        export: function() {
-            const settings = this.load();
-            const dataStr = JSON.stringify(settings, null, 2);
-            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-            
-            const link = document.createElement('a');
-            link.setAttribute('href', dataUri);
-            link.setAttribute('download', 'idos-settings.json');
-            link.click();
-        },
-        
-        import: function(content) {
-            try {
-                const settings = JSON.parse(content);
-                this.save(settings);
-                this.apply();
-                return true;
-            } catch (e) {
-                console.error('خطأ في استيراد الإعدادات:', e);
-                return false;
+
+            function loadHistory() {
+                try {
+                    const history = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+                    if (history.length) {
+                        history.forEach(msg => appendMessage(msg.role, msg.text, false));
+                    } else {
+                        appendMessage('ai', '🩺 **مرحباً بك في المساعد الطبي الذكي**\n\nأستطيع الإجابة على جميع أسئلتك الطبية:\n\n• **أعراض الأمراض** (صداع، حمى، كحة، ألم)\n• **الأمراض المزمنة** (سكر، ضغط، قلب)\n• **صحة المرأة والطفل**\n• **التغذية والحميات**\n• **الصحة النفسية**\n• **الإسعافات الأولية**\n• **الأدوية والعلاجات**\n\n**كيف يمكنني مساعدتك اليوم؟**', true);
+                    }
+                } catch (e) {
+                    appendMessage('ai', 'مرحباً، أنا المساعد الطبي. اسألني عن أي عرض صحي.', true);
+                }
             }
-        }
-    };
 
-    const toggleDarkMode = () => {
-        const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
-        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-        SettingsManager.update('theme', newTheme);
-        updateThemeIcon();
-    };
-
-    const updateThemeIcon = () => {
-        const themeToggle = document.getElementById('darkModeToggle');
-        if (!themeToggle) return;
-        
-        const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
-        const icon = themeToggle.querySelector('i');
-        if (currentTheme === 'dark') {
-            icon.className = 'fas fa-sun';
-            themeToggle.title = 'التبديل إلى الوضع الفاتح';
-        } else {
-            icon.className = 'fas fa-moon';
-            themeToggle.title = 'التبديل إلى الوضع الداكن';
-        }
-    };
-
-    const addDarkModeToggle = () => {
-        if (document.getElementById('darkModeToggle')) return;
-
-        const themeToggle = document.createElement('button');
-        themeToggle.id = 'darkModeToggle';
-        themeToggle.className = 'btn-animate theme-toggle';
-        themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-        themeToggle.title = 'تبديل الوضع الداكن';
-        themeToggle.setAttribute('aria-label', 'تبديل الوضع الداكن/الفاتح');
-
-        const headerActions = document.querySelector('.user-actions') || 
-                             document.querySelector('.main-nav')?.parentElement || 
-                             document.querySelector('.nav-container');
-        
-        if (headerActions) {
-            headerActions.insertBefore(themeToggle, headerActions.firstChild);
-        } else {
-            const header = document.querySelector('header') || document.body;
-            if (header) {
-                header.appendChild(themeToggle);
-                themeToggle.style.position = 'absolute';
-                themeToggle.style.top = '1rem';
-                themeToggle.style.left = '1rem';
+            function clearHistory() {
+                if (confirm('هل أنت متأكد من مسح جميع المحادثات؟')) {
+                    localStorage.removeItem(STORAGE_KEY);
+                    chatWindow.innerHTML = '';
+                    appendMessage('ai', '🧹 تم مسح المحادثة. كيف يمكنني مساعدتك طبياً؟', true);
+                }
             }
-        }
 
-        themeToggle.addEventListener('click', toggleDarkMode);
-        setTimeout(updateThemeIcon, 100);
-    };
+            // أحداث الصفحة
+            chatForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const userMsg = chatInput.value.trim();
+                if (!userMsg) return;
 
-    const initSettings = () => {
-        window.SettingsManager = SettingsManager;
-        window.toggleDarkMode = toggleDarkMode;
-        window.updateThemeIcon = updateThemeIcon;
-        
-        SettingsManager.apply();
-        addDarkModeToggle();
-    };
+                appendMessage('user', userMsg);
+                chatInput.value = '';
 
-    const init = () => {
-        addButtonStyles();
-        checkExistingSession();
-        addInputEffects();
-        applyButtonAnimations();
-        createDashboardSidebar();
-        initSettings();
-        
-        document.querySelectorAll('.emergency-btn').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                this.style.transform = 'scale(0.95)';
+                showTypingIndicator();
+
                 setTimeout(() => {
-                    this.style.transform = '';
-                }, 150);
-                
-                console.log('تم النقر على زر الطوارئ:', this.querySelector('strong')?.textContent || 'طوارئ');
+                    hideTypingIndicator();
+                    const reply = getMedicalReply(userMsg);
+                    appendMessage('ai', reply);
+                }, 900 + Math.random() * 600);
             });
-        });
 
-        window.addEventListener('resize', () => {
-            setTimeout(applyButtonAnimations, 300);
-        });
-    };
+            clearBtn.addEventListener('click', clearHistory);
 
-    init();
-});
-
-// Google Maps callback
-let map;
-let userMarker;
-let infoWindow;
-
-window.initMap = function () {
-    const mapContainer = document.getElementById("mapCanvas");
-    const statusEl = document.getElementById("mapStatus");
-    if (!mapContainer) return;
-
-    const benha = { lat: 30.466141, lng: 31.184769 };
-    map = new google.maps.Map(mapContainer, {
-        center: benha,
-        zoom: 14,
-        mapTypeControl: false,
-        streetViewControl: false,
-        fullscreenControl: true
-    });
-
-    infoWindow = new google.maps.InfoWindow();
-
-    const hospitals = [
-        {
-            name: "مستشفى بنها الجامعي",
-            position: { lat: 30.466611, lng: 31.177723 },
-            address: "شارع كورنيش النيل، بنها"
-        },
-        {
-            name: "مستشفى بنها التعليمي",
-            position: { lat: 30.470851, lng: 31.188932 },
-            address: "شارع الجيش، بنها"
-        },
-        {
-            name: "مستشفى الراعي الصالح",
-            position: { lat: 30.460148, lng: 31.191663 },
-            address: "شارع فريد ندي، بنها"
-        },
-        {
-            name: "مركز بنها الطبي المتخصص",
-            position: { lat: 30.472942, lng: 31.182431 },
-            address: "ميدان الإشارة، بنها"
-        }
-    ];
-
-    hospitals.forEach((hospital) => {
-        const marker = new google.maps.Marker({
-            position: hospital.position,
-            map,
-            title: hospital.name,
-            icon: {
-                path: google.maps.SymbolPath.CIRCLE,
-                scale: 8,
-                fillColor: "#8b5cf6",
-                fillOpacity: 0.9,
-                strokeWeight: 2,
-                strokeColor: "#7c3aed"
-            }
-        });
-
-        marker.addListener("click", () => {
-            infoWindow.setContent(`
-                <div style="text-align:right; min-width:200px; font-family: 'Cairo', sans-serif;">
-                    <strong style="color: #8b5cf6;">${hospital.name}</strong>
-                    <p style="margin:6px 0;">${hospital.address}</p>
-                    <p style="margin:6px 0; color: #ef4444; font-weight: bold;">☎️ 123</p>
-                    <a href="https://www.google.com/maps/dir/?api=1&destination=${hospital.position.lat},${hospital.position.lng}" target="_blank" rel="noopener" style="color: #8b5cf6; text-decoration: none; font-weight: 600;">عرض الاتجاهات</a>
-                </div>
-            `);
-            infoWindow.open(map, marker);
-        });
-    });
-
-    const isSecureContext = window.location.protocol === 'https:' || window.location.hostname === 'localhost';
-    
-    if (navigator.geolocation && isSecureContext) {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                const userLocation = {
-                    lat: position.coords.latitude,
-                    lng: position.coords.longitude
-                };
-                if (!userMarker) {
-                    userMarker = new google.maps.Marker({
-                        position: userLocation,
-                        map,
-                        title: "موقعك الحالي",
-                        icon: {
-                            path: google.maps.SymbolPath.CIRCLE,
-                            scale: 10,
-                            fillColor: "#22c55e",
-                            fillOpacity: 0.9,
-                            strokeWeight: 3,
-                            strokeColor: "#15803d"
-                        }
-                    });
-                } else {
-                    userMarker.setPosition(userLocation);
-                }
-                map.panTo(userLocation);
-                if (statusEl) {
-                    statusEl.textContent = "تم تحديد موقعك الحالي. يمكنك استكشاف المستشفيات حولك.";
-                }
-            },
-            (error) => {
-                console.warn("خطأ في تحديد الموقع:", error);
-                if (statusEl) {
-                    statusEl.textContent = "تعذر تحديد موقعك. يمكنك السماح بالوصول إلى الموقع أو البحث يدويًا.";
-                }
-            },
-            { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-        );
-    } else {
-        if (statusEl) {
-            statusEl.textContent = !isSecureContext 
-                ? "خدمة تحديد الموقع تتطلب اتصالاً آمناً (HTTPS)."
-                : "المتصفح لا يدعم التتبع الجغرافي.";
-        }
-    }
-};
+            // بدء التشغيل
+            loadHistory();
+            chatInput.focus();
+            
+            console.log('✅ تم تحميل صفحة المحادثة بنجاح');
+        })();
+    </script>
+</body>
+</html>
